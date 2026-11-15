@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UCS Visualizer - Adventure Edition</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="slides.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=JetBrains+Mono:wght@600;700&family=Nunito:wght@700;800;900&display=swap"
+    rel="stylesheet">
+</head>
+
+<body class="adventure-theme">
+
+  <!-- Full Screen Intro / Welcome Cover Screen -->
+  <div id="intro-screen" class="intro-fullscreen">
+    <!-- Animated background floating graph nodes (pure CSS) -->
+    <div class="intro-bg-decor" aria-hidden="true">
+      <div class="decor-circle decor-1">S</div>
+      <div class="decor-circle decor-2">A</div>
+      <div class="decor-circle decor-3">B</div>
+      <div class="decor-circle decor-4">G</div>
+      <div class="decor-circle decor-5">M</div>
+    </div>
+
+    <div class="intro-card">
+      <div class="intro-tag-row">
+        <span class="intro-tag">ARTIFICIAL INTELLIGENCE PROJECT</span>
+        <span class="intro-subtag">UOB • 3RD STAGE</span>
+      </div>
+
+      <div class="intro-icon-banner">
+        <div class="intro-logo-pill">UCS</div>
+      </div>
+
+      <h1 class="intro-title">
+        Uniform Cost Search<br>
+        <span class="intro-title-highlight">Algorithm Visualizer</span>
+      </h1>
+
+      <div class="intro-authors-section">
+        <span class="intro-authors-label">PREPARED BY</span>
+        <div class="intro-authors-cards">
+          <div class="author-badge">
+            <span class="author-avatar avatar-mustafa">M</span>
+            <span class="author-name">Mustafa Ahmed Ghafour</span>
+          </div>
+          <span class="author-amp">&amp;</span>
+          <div class="author-badge">
+            <span class="author-avatar avatar-mohammed">M</span>
+            <span class="author-name">Mohammed Mahdi Salih</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="intro-actions-row">
+        <button id="btn-intro-slides" class="btn-adv btn-intro-slides" type="button">
+          <span>Presentation Slides 🗂️</span>
+        </button>
+        <button id="btn-start-visualizer" class="btn-adv btn-intro-launch" type="button">
+          <span>Enter Visualizer ▶</span>
+        </button>
+      </div>
+
+      <div class="intro-footer-hint">
+        <span>Press <kbd>Enter</kbd> or click to start</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Graph Selector & Custom Python Graph Hub -->
+  <div id="start-modal" class="modal-backdrop">
+    <div class="modal-card modal-selector-card">
+      <div class="modal-header-bar">
+        <div class="modal-tag">UCS GRAPH SELECTION &amp; CUSTOMIZER</div>
+        <button id="btn-modal-close" class="btn-modal-close-icon" title="Close Selector">✕</button>
+      </div>
+
+      <h2>Choose or Customize Graph</h2>
+      <p class="modal-desc">
+        Select one of the preset visualizer graphs or enter your own custom Python dictionary:
+      </p>
+
+      <!-- 3 Graph Mode Cards -->
+      <div class="graph-modes-grid">
+        <!-- Card 1: Multi-Branch Graph 1 -->
+        <div class="graph-select-card" id="card-mode-graph1">
+          <div class="select-card-badge badge-bmo">GRAPH 1</div>
+          <h4>Multi-Branch Graph</h4>
+          <span class="select-route">Node S ➔ Node G</span>
+
+          <div class="select-preview-box">
+            <svg viewBox="0 0 160 70" class="mini-svg-preview">
+              <circle cx="15" cy="35" r="6" fill="#52c9a5" stroke="#1f2937" stroke-width="1.5" />
+              <text x="15" y="37.5" font-size="6.5" font-weight="900" text-anchor="middle" fill="#1f2937">S</text>
+              <line x1="21" y1="33" x2="44" y2="20" stroke="#1f2937" stroke-width="1.2" />
+              <line x1="21" y1="37" x2="44" y2="50" stroke="#1f2937" stroke-width="1.2" />
+              <circle cx="50" cy="20" r="5.5" fill="#ffffff" stroke="#1f2937" stroke-width="1.2" />
+              <text x="50" y="22" font-size="6" font-weight="900" text-anchor="middle" fill="#1f2937">A</text>
+              <circle cx="50" cy="50" r="5.5" fill="#ffffff" stroke="#1f2937" stroke-width="1.2" />
+              <text x="50" y="52" font-size="6" font-weight="900" text-anchor="middle" fill="#1f2937">B</text>
+              <line x1="56" y1="20" x2="84" y2="18" stroke="#1f2937" stroke-width="1.2" />
+              <line x1="56" y1="22" x2="84" y2="47" stroke="#1f2937" stroke-width="1.2" />
+              <line x1="56" y1="48" x2="84" y2="48" stroke="#1f2937" stroke-width="1.2" />
+              <circle cx="90" cy="18" r="5.5" fill="#ffffff" stroke="#1f2937" stroke-width="1.2" />
+              <text x="90" y="20" font-size="6" font-weight="900" text-anchor="middle" fill="#1f2937">C</text>
+              <circle cx="90" cy="48" r="5.5" fill="#ffffff" stroke="#1f2937" stroke-width="1.2" />
+              <text x="90" y="50" font-size="6" font-weight="900" text-anchor="middle" fill="#1f2937">D</text>
+              <line x1="96" y1="18" x2="124" y2="18" stroke="#1f2937" stroke-width="1.2" />
+              <line x1="96" y1="48" x2="124" y2="48" stroke="#1f2937" stroke-width="1.2" />
+              <circle cx="130" cy="18" r="5.5" fill="#ffffff" stroke="#1f2937" stroke-width="1.2" />
+              <text x="130" y="20" font-size="6" font-weight="900" text-anchor="middle" fill="#1f2937">F</text>
+              <circle cx="130" cy="48" r="5.5" fill="#ffffff" stroke="#1f2937" stroke-width="1.2" />
+              <text x="130" y="50" font-size="6" font-weight="900" text-anchor="middle" fill="#1f2937">E</text>
+              <line x1="135" y1="21" x2="149" y2="32" stroke="#1f2937" stroke-width="1.2" />
+              <line x1="135" y1="45" x2="149" y2="38" stroke="#1f2937" stroke-width="1.2" />
+              <circle cx="152" cy="35" r="6" fill="#fca5a5" stroke="#1f2937" stroke-width="1.5" />
+              <text x="152" y="37.5" font-size="6.5" font-weight="900" text-anchor="middle" fill="#1f2937">G</text>
+            </svg>
+          </div>
+
+          <div class="card-meta-tags">
+            <span class="meta-pill">8 Nodes</span>
+            <span class="meta-pill">11 Edges</span>
+            <span class="meta-pill opt-pill">Cost: 170</span>
+          </div>
+
+          <button id="btn-load-graph1" class="btn-adv btn-select-action">
+            <span>Select Graph 1</span>
+          </button>
+        </div>
+
+        <!-- Card 2: Assignment Graph 2 -->
+        <div class="graph-select-card" id="card-mode-graph2">
+          <div class="select-card-badge badge-jake">GRAPH 2</div>
+          <h4>Assignment Graph</h4>
+          <span class="select-route">Node S ➔ Node M</span>
+
+          <div class="select-preview-box">
+            <svg viewBox="0 0 160 70" class="mini-svg-preview">
+              <circle cx="15" cy="35" r="7" fill="#52c9a5" stroke="#1f2937" stroke-width="1.8" />
+              <text x="15" y="38" font-size="8" font-weight="900" text-anchor="middle" fill="#1f2937">S</text>
+              <line x1="22" y1="35" x2="43" y2="18" stroke="#1f2937" stroke-width="1.5" />
+              <line x1="22" y1="35" x2="43" y2="35" stroke="#1f2937" stroke-width="1.5" />
+              <line x1="22" y1="35" x2="43" y2="52" stroke="#1f2937" stroke-width="1.5" />
+              <circle cx="50" cy="18" r="6" fill="#ffffff" stroke="#1f2937" stroke-width="1.5" />
+              <circle cx="50" cy="35" r="6" fill="#ffffff" stroke="#1f2937" stroke-width="1.5" />
+              <circle cx="50" cy="52" r="6" fill="#ffffff" stroke="#1f2937" stroke-width="1.5" />
+              <line x1="56" y1="35" x2="84" y2="35" stroke="#1f2937" stroke-width="1.5" />
+              <circle cx="90" cy="35" r="6" fill="#ffffff" stroke="#1f2937" stroke-width="1.5" />
+              <line x1="96" y1="35" x2="138" y2="35" stroke="#1f2937" stroke-width="1.5" />
+              <circle cx="145" cy="35" r="7" fill="#fca5a5" stroke="#1f2937" stroke-width="1.8" />
+              <text x="145" y="38" font-size="8" font-weight="900" text-anchor="middle" fill="#1f2937">M</text>
+            </svg>
+          </div>
+
+          <div class="card-meta-tags">
+            <span class="meta-pill">14 Nodes</span>
+            <span class="meta-pill">24 Edges</span>
+            <span class="meta-pill opt-pill">Cost: 450</span>
+          </div>
+
+          <button id="btn-load-graph2" class="btn-adv btn-select-action">
+            <span>Select Graph 2</span>
+          </button>
+        </div>
+
+        <!-- Card 3: Custom Python Graph -->
+        <div class="graph-select-card" id="card-mode-custom">
+          <div class="select-card-badge badge-bubblegum">CUSTOM</div>
+          <h4>Python Dictionary</h4>
+          <span class="select-route">Custom Start ➔ Goal</span>
+
+          <div class="select-preview-box custom-preview-box">
+            <pre class="mini-code-preview">graph = {
+  'S': [('A', 100), ('B', 50)],
+  'A': [('C', 120), ('G', 300)],
+  ...
+}</pre>
+          </div>
+
+          <div class="card-meta-tags">
+            <span class="meta-pill">Any Nodes</span>
+            <span class="meta-pill">Auto-Layout</span>
+            <span class="meta-pill">Python Code</span>
+          </div>
+
+          <button id="btn-toggle-custom" class="btn-adv btn-select-action btn-custom-action">
+            <span>Customize Graph</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Collapsible Custom Graph Code Drawer -->
+      <div id="custom-graph-drawer" class="custom-graph-drawer hidden">
+        <div class="drawer-header">
+          <div class="drawer-title-wrap">
+            <span class="drawer-badge">PYTHON DICTIONARY INPUT</span>
+            <h4>Enter Custom Graph Code</h4>
+          </div>
+          <div class="drawer-templates">
+            <button id="btn-tpl-g1" class="btn-adv btn-tiny" type="button">Graph 1 Template</button>
+            <button id="btn-tpl-g2" class="btn-adv btn-tiny" type="button">Graph 2 Template</button>
+          </div>
+        </div>
+
+        <div class="custom-inputs-row">
+          <div class="input-field-group">
+            <label for="custom-start-node">Start Node:</label>
+            <input type="text" id="custom-start-node" value="S" maxlength="8">
+          </div>
+          <div class="input-field-group">
+            <label for="custom-goal-node">Goal Node:</label>
+            <input type="text" id="custom-goal-node" value="G" maxlength="8">
+          </div>
+          <span class="input-hint">Syntax: 'Node': [('Neighbor', cost), ...]</span>
+        </div>
+
+        <div class="code-textarea-wrap">
+          <textarea id="custom-graph-code" spellcheck="false" rows="7">graph = {
+    'S': [('A', 40), ('B', 70)],
+    'A': [('C', 60), ('D', 100)],
+    'B': [('D', 30), ('E', 80)],
+    'C': [('F', 40)],
+    'D': [('E', 20), ('G', 90)],
+    'E': [('G', 60)],
+    'F': [('G', 30)],
+    'G': []
+}</textarea>
+        </div>
+
+        <div id="custom-graph-error" class="custom-error-box hidden"></div>
+
+        <div class="drawer-actions">
+          <button id="btn-apply-custom-graph" class="btn-adv btn-finn-large" type="button">
+            <span>Parse &amp; Apply Graph</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Start Default Button at Bottom -->
+      <div class="modal-footer-quick">
+        <button id="btn-modal-start" class="btn-adv btn-modal-dismiss">
+          <span>Continue with Current Graph</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal: Function Code Viewer (from ucs.py) -->
+  <div id="function-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card modal-function-card modal-simple-code">
+      <div class="modal-header-bar">
+        <div class="fn-modal-tag-group">
+          <span class="modal-tag badge-fn-tag" id="fn-modal-title">ExtractMin(FRONTIER)</span>
+          <span class="fn-source-file-badge" id="fn-modal-file-badge">ucs.py: lines 1-6</span>
+        </div>
+        <button id="btn-fn-modal-close" class="btn-modal-close-icon" title="Close (Esc)">✕</button>
+      </div>
+
+      <!-- Code Editor Pane identical to main editor -->
+      <div class="code-editor-pane fn-code-editor-pane">
+        <div class="code-editor-header">
+          <span class="dot-btn red-dot"></span>
+          <span class="dot-btn yellow-dot"></span>
+          <span class="dot-btn green-dot"></span>
+          <span class="editor-filename" id="fn-modal-filename">ucs.py</span>
+          <button id="btn-copy-fn-code" class="btn-copy-code" type="button" title="Copy code">
+            <span id="copy-btn-text">Copy</span>
+          </button>
+        </div>
+        <div class="code-editor-full fn-code-editor-full" id="fn-modal-code-lines">
+          <!-- Dynamically populated lines -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Screen Presentation Slides Deck Modal -->
+  <div id="slides-overlay" class="slides-overlay hidden" role="dialog" aria-modal="true" aria-label="UCS Presentation Slides">
+    <!-- Floating Exit Fullscreen Button (Appears only in fullscreen mode) -->
+    <div class="fullscreen-exit-float">
+      <button id="btn-float-exit" class="btn-float-exit" type="button" title="Exit Fullscreen (Esc or F)">Exit Fullscreen ✕</button>
+    </div>
+
+    <!-- Top Slides Header Bar (Hidden in Fullscreen) -->
+    <div class="slides-header-bar">
+      <div class="slides-header-left">
+        <span class="slides-project-tag">AI PRESENTATION</span>
+        <span class="slides-header-title">Uniform Cost Search (UCS) — Slide Deck</span>
+      </div>
+      <div class="slides-header-right">
+        <button id="btn-slide-fullscreen" class="btn-slide-nav" type="button" title="Toggle Fullscreen (F)">
+          <span id="slide-fs-icon">⛶</span> <span>Fullscreen</span>
+        </button>
+        <button id="btn-slides-close" class="btn-slide-nav btn-slide-close" type="button" title="Close Slides (Esc)">
+          <span>✕ Exit</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Track -->
+    <div class="slides-progress-track">
+      <div id="slides-progress-fill" class="slides-progress-fill" style="width: 12.5%;"></div>
+    </div>
+
+    <!-- Slides Viewport (Strict Zero Scroll) -->
+    <div class="slides-viewport" id="slides-viewport">
+
+      <!-- Slide 1: Cover Slide -->
+      <section class="slide-pane active" id="slide-1" data-slide="1">
+        <div class="slide-cover-card">
+          <span class="cover-pill-label">Slide 1 — Cover Slide</span>
+          <h1 class="cover-big-title">Uniform Cost Search (UCS)</h1>
+          <p class="cover-sub-title">Algorithm Implementation and Code Explanation</p>
+
+          <div class="cover-authors-container">
+            <div class="cover-authors-tag">Presented By</div>
+            <div class="cover-authors-row">
+              <div class="cover-author-pill">
+                <span class="author-round-icon mustafa">M</span>
+                <span class="author-label-name">Mustafa Ahmed Ghafour</span>
+              </div>
+              <span class="cover-authors-and">&amp;</span>
+              <div class="cover-author-pill">
+                <span class="author-round-icon mohammed">M</span>
+                <span class="author-label-name">Mohammed Mahdi Salih</span>
+              </div>
+            </div>
+            <div class="cover-supervisor-row">
+              <span class="supervisor-label">Supervisor:</span>
+              <span class="supervisor-name">Dr. Salwa Aqeel</span>
+            </div>
+          </div>
+
+          <div class="cover-meta-info">
+            <span>University of Baghdad</span>
+            <span>•</span>
+            <span>College of Science — CS Dept</span>
+            <span>•</span>
+            <span>Artificial Intelligence Project</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 2: Introduction to UCS -->
+      <section class="slide-pane" id="slide-2" data-slide="2">
+        <div class="slide-top-meta">
+          <span class="slide-badge-category">Slide 2 — Overview</span>
+          <h2 class="slide-heading-main">Introduction to <span class="accent-text">Uniform Cost Search</span></h2>
+        </div>
+
+        <!-- Row 1: Definition -->
+        <div class="slide-lead-box">
+          <strong>Definition:</strong> Uniform Cost Search (UCS) is an uninformed search algorithm that finds the least-cost path from a starting node to a goal node. It expands the node with the lowest cumulative path cost first.
+        </div>
+
+        <!-- Row 2: How Does It Work? Full Width -->
+        <div class="adv-card slide2-how-card">
+          <h3 class="slide-sub-title">How Does It Work?</h3>
+          <ul class="slide2-how-grid">
+            <li>Starts from the initial node with a cost of zero.</li>
+            <li>Explores the node with the lowest total cost.</li>
+            <li>Calculates the cost of reaching neighboring nodes.</li>
+            <li>Updates the path if a cheaper route is found.</li>
+            <li class="col-span-2">Stops when the goal is selected from the Frontier.</li>
+          </ul>
+        </div>
+
+        <!-- Row 3: Advantages, Disadvantages, Applications (Rows not Columns) -->
+        <div class="slide2-row-boxes">
+          <div class="slide-mini-feature pros">
+            <div class="mini-feature-header">Advantages</div>
+            <ul class="mini-feature-list">
+              <li>Finds optimal path when edge costs are non-negative.</li>
+              <li>Does not require heuristic information.</li>
+              <li>Handles different path costs effectively.</li>
+            </ul>
+          </div>
+
+          <div class="slide-mini-feature cons">
+            <div class="mini-feature-header">Disadvantages</div>
+            <ul class="mini-feature-list">
+              <li>Can consume a large amount of memory.</li>
+              <li>May explore many unnecessary nodes.</li>
+              <li>Can be slower than informed search algorithms.</li>
+            </ul>
+          </div>
+
+          <div class="slide-mini-feature apps">
+            <div class="mini-feature-header">Applications</div>
+            <ul class="mini-feature-list">
+              <li>GPS and route finding.</li>
+              <li>Network routing.</li>
+              <li>Pathfinding in Artificial Intelligence.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Complete Source Code (ucs.py) -->
+      <section class="slide-pane" id="slide-3" data-slide="3">
+        <div class="slide-top-meta">
+          <span class="slide-badge-category">Slide 3 — Complete Source Code</span>
+          <h2 class="slide-heading-main">Uniform Cost Search — <span class="accent-text">Full Implementation (ucs.py)</span></h2>
+        </div>
+
+        <div class="full-code-grid">
+          <!-- Left Column: Helper Functions -->
+          <div class="full-code-col">
+            <div class="code-editor-card full-editor">
+              <div class="code-card-header">
+                <span class="code-card-title">Helper Functions</span>
+                <span class="code-card-tag">ucs.py: lines 1-20</span>
+              </div>
+              <pre class="slide-code-box"><span class="comm"># 1. Extract Minimum Cost Node</span>
+<span class="kw">def</span> <span class="fn">ExtractMin</span>(<span class="var">FRONTIER</span>):
+    <span class="var">FRONTIER</span>.<span class="fn">sort</span>()
+    <span class="kw">return</span> <span class="var">FRONTIER</span>.<span class="fn">pop</span>(<span class="num">0</span>)
+
+
+<span class="comm"># 2. Build Path From Goal to Start</span>
+<span class="kw">def</span> <span class="fn">BuildPath</span>(<span class="var">PARENT</span>, <span class="var">u</span>):
+    <span class="var">PATH</span> = []
+    <span class="kw">while</span> <span class="var">u</span> <span class="kw">is not None</span>:
+        <span class="var">PATH</span>.<span class="fn">append</span>(<span class="var">u</span>)
+        <span class="var">u</span> = <span class="var">PARENT</span>[<span class="var">u</span>]
+    <span class="var">PATH</span>.<span class="fn">reverse</span>()
+    <span class="kw">return</span> <span class="var">PATH</span></pre>
+            </div>
+            
+            <div class="adv-card full-code-note">
+              <strong>💡 Code Overview:</strong>
+              <span>Clean, modular structure directly from <code>ucs.py</code>. Configured for <strong>Graph 1 (S ➔ G)</strong>, solving the 8-node multi-branch network and finding the optimal route with total cost of 170.</span>
+            </div>
+          </div>
+
+          <!-- Right Column: Main Algorithm -->
+          <div class="full-code-col">
+            <div class="code-editor-card full-editor">
+              <div class="code-card-header">
+                <span class="code-card-title">Main Search Algorithm</span>
+                <span class="code-card-tag">ucs.py: lines 23-65</span>
+              </div>
+              <pre class="slide-code-box"><span class="kw">def</span> <span class="fn">uniform_cost_search</span>(<span class="var">s</span>, <span class="var">goal</span>):
+    <span class="var">FRONTIER</span> = [(<span class="num">0</span>, <span class="var">s</span>)]
+    <span class="var">EXPLORED</span> = <span class="fn">set</span>()
+    <span class="var">COST</span> = {<span class="var">s</span>: <span class="num">0</span>}
+    <span class="var">PARENT</span> = {<span class="var">s</span>: <span class="kw">None</span>}
+
+    <span class="kw">while</span> <span class="var">FRONTIER</span>:
+        <span class="var">current_cost</span>, <span class="var">u</span> = <span class="fn">ExtractMin</span>(<span class="var">FRONTIER</span>)
+        <span class="kw">if</span> <span class="var">u</span> == <span class="var">goal</span>:
+            <span class="kw">return</span> <span class="fn">BuildPath</span>(<span class="var">PARENT</span>, <span class="var">u</span>), <span class="var">COST</span>[<span class="var">u</span>]
+
+        <span class="var">EXPLORED</span>.<span class="fn">add</span>(<span class="var">u</span>)
+
+        <span class="kw">for</span> <span class="var">v</span>, <span class="var">edge_cost</span> <span class="kw">in</span> <span class="var">graph</span>[<span class="var">u</span>]:
+            <span class="kw">if</span> <span class="var">v</span> <span class="kw">in</span> <span class="var">EXPLORED</span>:
+                <span class="kw">continue</span>
+            <span class="var">new_cost</span> = <span class="var">COST</span>[<span class="var">u</span>] + <span class="var">edge_cost</span>
+            <span class="kw">if</span> <span class="var">v</span> <span class="kw">not in</span> <span class="var">COST</span> <span class="kw">or</span> <span class="var">new_cost</span> &lt; <span class="var">COST</span>[<span class="var">v</span>]:
+                <span class="var">COST</span>[<span class="var">v</span>] = <span class="var">new_cost</span>
+                <span class="var">PARENT</span>[<span class="var">v</span>] = <span class="var">u</span>
+                <span class="fn">UpdatePriorityQueue</span>(<span class="var">FRONTIER</span>, <span class="var">v</span>, <span class="var">new_cost</span>)
+
+    <span class="kw">return</span> [], <span class="fn">float</span>(<span class="num">'inf'</span>)</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Problem Graph Definition & Topology (ucs.py) -->
+      <section class="slide-pane" id="slide-4" data-slide="4">
+        <div class="slide-top-meta">
+          <span class="slide-badge-category">Slide 4 — Problem Graph</span>
+          <h2 class="slide-heading-main">Graph Definition &amp; <span class="accent-text">Topology (ucs.py)</span></h2>
+        </div>
+
+        <div class="slide-graph-def-grid">
+          <!-- Left Column: Python Dictionary Code & Meta -->
+          <div class="slide-graph-code-col">
+            <div class="code-editor-card">
+              <div class="code-card-header">
+                <span class="code-card-title">graph Dictionary (Adjacency List)</span>
+                <span class="code-card-tag">ucs.py: lines 68-85</span>
+              </div>
+              <pre class="slide-code-box"><span class="comm"># Graph Adjacency List with Edge Costs</span>
+<span class="var">graph</span> = {
+    <span class="num">'S'</span>: [(<span class="num">'A'</span>, <span class="num">40</span>), (<span class="num">'B'</span>, <span class="num">70</span>)],
+    <span class="num">'A'</span>: [(<span class="num">'C'</span>, <span class="num">60</span>), (<span class="num">'D'</span>, <span class="num">100</span>)],
+    <span class="num">'B'</span>: [(<span class="num">'D'</span>, <span class="num">30</span>), (<span class="num">'E'</span>, <span class="num">80</span>)],
+    <span class="num">'C'</span>: [(<span class="num">'F'</span>, <span class="num">40</span>)],
+    <span class="num">'D'</span>: [(<span class="num">'E'</span>, <span class="num">20</span>), (<span class="num">'G'</span>, <span class="num">90</span>)],
+    <span class="num">'E'</span>: [(<span class="num">'G'</span>, <span class="num">60</span>)],
+    <span class="num">'F'</span>: [(<span class="num">'G'</span>, <span class="num">30</span>)],
+    <span class="num">'G'</span>: []
+}
+
+<span class="comm"># Algorithm Execution Parameters</span>
+<span class="var">PATH</span>, <span class="var">total_cost</span> = <span class="fn">uniform_cost_search</span>(<span class="num">'S'</span>, <span class="num">'G'</span>)</pre>
+            </div>
+
+            <!-- Meta pills / Data Structure Info -->
+            <div class="graph-meta-pills-card">
+              <div class="graph-meta-pill-item">
+                <span class="pill-badge">Data Structure</span>
+                <span>Python Dictionary representing Weighted Directed Adjacency List.</span>
+              </div>
+              <div class="graph-meta-pill-item">
+                <span class="pill-badge">Format</span>
+                <span><code>node: [(neighbor, edge_cost), ...]</code> with non-negative costs.</span>
+              </div>
+              <div class="graph-meta-pill-item">
+                <span class="pill-badge">Search Goal</span>
+                <span>Find least-cost optimal route from Start <strong>'S'</strong> to Goal <strong>'G'</strong>.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Visual Graph Map (Adventure Time Canvas Style) -->
+          <div class="slide-graph-view-card">
+            <div class="slide-graph-view-header">
+              <h4>Visual Graph Architecture</h4>
+              <div class="slide-graph-legend-group">
+                <span class="graph-legend-badge start">Start: S</span>
+                <span class="graph-legend-badge goal">Goal: G</span>
+                <span class="graph-legend-badge stats">8 Nodes • 11 Edges</span>
+              </div>
+            </div>
+
+            <!-- SVG Canvas from Visualizer -->
+            <div class="slide-canvas-display-box">
+              <svg class="slide-canvas-display-svg" viewBox="50 65 860 225" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="slide4-arrow-ink" viewBox="0 0 10 10" refX="24" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#1a202c" />
+                  </marker>
+                </defs>
+
+                <!-- Directed Edge Lines (Dark Ink with Directional Arrows) -->
+                <g fill="none" stroke="#1a202c" stroke-width="2.6" marker-end="url(#slide4-arrow-ink)">
+                  <!-- From S -->
+                  <line x1="90" y1="175" x2="270" y2="105" />
+                  <line x1="90" y1="175" x2="270" y2="255" />
+                  <!-- From A -->
+                  <line x1="270" y1="105" x2="470" y2="95" />
+                  <line x1="270" y1="105" x2="470" y2="235" />
+                  <!-- From B -->
+                  <line x1="270" y1="255" x2="470" y2="235" />
+                  <path d="M 270 255 Q 470 315 670 235" />
+                  <!-- From C -->
+                  <line x1="470" y1="95" x2="670" y2="95" />
+                  <!-- From D -->
+                  <line x1="470" y1="235" x2="670" y2="235" />
+                  <path d="M 470 235 Q 670 268 870 175" />
+                  <!-- From E -->
+                  <line x1="670" y1="235" x2="870" y2="175" />
+                  <!-- From F -->
+                  <line x1="670" y1="95" x2="870" y2="175" />
+                </g>
+
+                <!-- Edge Weight Badges (Jake Yellow Pills) -->
+                <g class="slide-edge-weights">
+                  <!-- S -> A (40) -->
+                  <g><rect x="165" y="125" width="28" height="17" rx="4" fill="#fef3c7" stroke="#1a202c" stroke-width="1.6"/><text x="179" y="138" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#78350f">40</text></g>
+                  <!-- S -> B (70) -->
+                  <g><rect x="165" y="215" width="28" height="17" rx="4" fill="#fef3c7" stroke="#1a202c" stroke-width="1.6"/><text x="179" y="228" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#78350f">70</text></g>
+                  <!-- A -> C (60) -->
+                  <g><rect x="356" y="85" width="28" height="17" rx="4" fill="#fef3c7" stroke="#1a202c" stroke-width="1.6"/><text x="370" y="98" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#78350f">60</text></g>
+                  <!-- A -> D (100) -->
+                  <g><rect x="354" y="162" width="32" height="17" rx="4" fill="#fef3c7" stroke="#1a202c" stroke-width="1.6"/><text x="370" y="175" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="10.5" font-weight="800" fill="#78350f">100</text></g>
+                  <!-- B -> D (30) -->
+                  <g><rect x="356" y="247" width="28" height="17" rx="4" fill="#fef3c7" stroke="#1a202c" stroke-width="1.6"/><text x="370" y="260" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#78350f">30</text></g>
+                  <!-- B -> E (80) -->
+                  <g><rect x="456" y="280" width="28" height="17" rx="4" fill="#fef3c7" stroke="#1a202c" stroke-width="1.6"/><text x="470" y="293" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#78350f">80</text></g>
+                  <!-- C -> F (40) -->
+                  <g><rect x="556" y="80" width="28" height="17" rx="4" fill="#fef3c7" stroke="#1a202c" stroke-width="1.6"/><text x="570" y="93" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#78350f">40</text></g>
+                  <!-- D -> E (20) -->
+                  <g><rect x="556" y="227" width="28" height="17" rx="4" fill="#fef3c7" stroke="#1a202c" stroke-width="1.6"/><text x="570" y="240" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#78350f">20</text></g>
+                  <!-- D -> G (90) -->
+                  <g><rect x="668" y="242" width="28" height="17" rx="4" fill="#fef3c7" stroke="#1a202c" stroke-width="1.6"/><text x="682" y="255" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#78350f">90</text></g>
+                  <!-- E -> G (60) -->
+                  <g><rect x="760" y="207" width="28" height="17" rx="4" fill="#fef3c7" stroke="#1a202c" stroke-width="1.6"/><text x="774" y="220" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#78350f">60</text></g>
+                  <!-- F -> G (30) -->
+                  <g><rect x="760" y="122" width="28" height="17" rx="4" fill="#fef3c7" stroke="#1a202c" stroke-width="1.6"/><text x="774" y="135" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#78350f">30</text></g>
+                </g>
+
+                <!-- Graph Nodes (Circles with Labels + Initial Costs) -->
+                <g class="slide-nodes-layer">
+                  <!-- Node S (Start) -->
+                  <g>
+                    <circle cx="90" cy="175" r="18" fill="#10b981" stroke="#1a202c" stroke-width="3" />
+                    <text x="90" y="180" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="800" fill="#ffffff">S</text>
+                    <text x="90" y="206" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="800" fill="#065f46">0</text>
+                  </g>
+                  <!-- Node A -->
+                  <g>
+                    <circle cx="270" cy="105" r="18" fill="#ffffff" stroke="#1a202c" stroke-width="2.8" />
+                    <text x="270" y="110" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="800" fill="#1a202c">A</text>
+                    <text x="270" y="136" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#64748b">∞</text>
+                  </g>
+                  <!-- Node B -->
+                  <g>
+                    <circle cx="270" cy="255" r="18" fill="#ffffff" stroke="#1a202c" stroke-width="2.8" />
+                    <text x="270" y="260" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="800" fill="#1a202c">B</text>
+                    <text x="270" y="286" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#64748b">∞</text>
+                  </g>
+                  <!-- Node C -->
+                  <g>
+                    <circle cx="470" cy="95" r="18" fill="#ffffff" stroke="#1a202c" stroke-width="2.8" />
+                    <text x="470" y="100" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="800" fill="#1a202c">C</text>
+                    <text x="470" y="126" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#64748b">∞</text>
+                  </g>
+                  <!-- Node D -->
+                  <g>
+                    <circle cx="470" cy="235" r="18" fill="#ffffff" stroke="#1a202c" stroke-width="2.8" />
+                    <text x="470" y="240" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="800" fill="#1a202c">D</text>
+                    <text x="470" y="266" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#64748b">∞</text>
+                  </g>
+                  <!-- Node F -->
+                  <g>
+                    <circle cx="670" cy="95" r="18" fill="#ffffff" stroke="#1a202c" stroke-width="2.8" />
+                    <text x="670" y="100" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="800" fill="#1a202c">F</text>
+                    <text x="670" y="126" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#64748b">∞</text>
+                  </g>
+                  <!-- Node E -->
+                  <g>
+                    <circle cx="670" cy="235" r="18" fill="#ffffff" stroke="#1a202c" stroke-width="2.8" />
+                    <text x="670" y="240" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="800" fill="#1a202c">E</text>
+                    <text x="670" y="266" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#64748b">∞</text>
+                  </g>
+                  <!-- Node G (Goal) -->
+                  <g>
+                    <circle cx="870" cy="175" r="18" fill="#ef4444" stroke="#1a202c" stroke-width="3" />
+                    <text x="870" y="180" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="800" fill="#ffffff">G</text>
+                    <text x="870" y="206" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="800" fill="#991b1b">∞</text>
+                  </g>
+                </g>
+              </svg>
+            </div>
+
+            <!-- Branch Paths Comparison -->
+            <div class="slide-branches-summary">
+              <span class="branches-summary-title">Alternative Routes from S ➔ G:</span>
+              <div class="branches-summary-grid">
+                <div class="branch-path-chip optimal">
+                  <span>S ➔ A ➔ C ➔ F ➔ G</span>
+                  <strong>Cost: 170 (Optimal)</strong>
+                </div>
+                <div class="branch-path-chip">
+                  <span>S ➔ B ➔ D ➔ E ➔ G</span>
+                  <strong>Cost: 180</strong>
+                </div>
+                <div class="branch-path-chip">
+                  <span>S ➔ B ➔ E ➔ G</span>
+                  <strong>Cost: 210</strong>
+                </div>
+                <div class="branch-path-chip">
+                  <span>S ➔ A ➔ D ➔ G</span>
+                  <strong>Cost: 230</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Helper Functions -->
+      <section class="slide-pane" id="slide-5" data-slide="5">
+        <div class="slide-top-meta">
+          <span class="slide-badge-category">Slide 5 — Helper Functions</span>
+          <h2 class="slide-heading-main">Helper <span class="accent-text">Functions Deep Dive</span></h2>
+        </div>
+
+        <div class="slide3-layout">
+          <!-- 1. ExtractMin() -->
+          <div class="code-editor-card">
+            <div class="code-card-header">
+              <span class="code-card-title">1. ExtractMin(FRONTIER)</span>
+              <span class="code-card-tag">Priority Queue</span>
+            </div>
+            <pre class="slide-code-box"><span class="kw">def</span> <span class="fn">ExtractMin</span>(<span class="var">FRONTIER</span>):
+    <span class="var">FRONTIER</span>.<span class="fn">sort</span>()
+    <span class="kw">return</span> <span class="var">FRONTIER</span>.<span class="fn">pop</span>(<span class="num">0</span>)</pre>
+            <ul class="slide-explain-list">
+              <li><code>FRONTIER.sort()</code> sorts nodes according to their costs.</li>
+              <li><code>pop(0)</code> removes and returns the node with lowest cost.</li>
+              <li>Ensures that UCS always selects the cheapest available node.</li>
+            </ul>
+          </div>
+
+          <!-- 2. BuildPath() -->
+          <div class="code-editor-card">
+            <div class="code-card-header">
+              <span class="code-card-title">2. BuildPath(PARENT, u)</span>
+              <span class="code-card-tag">Backtracking</span>
+            </div>
+            <pre class="slide-code-box"><span class="kw">def</span> <span class="fn">BuildPath</span>(<span class="var">PARENT</span>, <span class="var">u</span>):
+    <span class="var">PATH</span> = []
+    <span class="kw">while</span> <span class="var">u</span> <span class="kw">is not None</span>:
+        <span class="var">PATH</span>.<span class="fn">append</span>(<span class="var">u</span>)
+        <span class="var">u</span> = <span class="var">PARENT</span>[<span class="var">u</span>]
+    <span class="var">PATH</span>.<span class="fn">reverse</span>()
+    <span class="kw">return</span> <span class="var">PATH</span></pre>
+            <ul class="slide-explain-list">
+              <li>Creates an empty list called <code>PATH</code> starting from goal node.</li>
+              <li>Uses <code>PARENT</code> dictionary to trace backwards to start node.</li>
+              <li>Adds each node and reverses the list for correct forward route.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: UCS Initialization and Main Loop -->
+      <section class="slide-pane" id="slide-6" data-slide="6">
+        <div class="slide-top-meta">
+          <span class="slide-badge-category">Slide 6 — Algorithm Core</span>
+          <h2 class="slide-heading-main">UCS <span class="accent-text">Initialization &amp; Main Loop</span></h2>
+        </div>
+
+        <div class="slide-body-content">
+          <!-- Top 3 Columns -->
+          <div class="slide4-top-row">
+            <!-- 1. Function Definition -->
+            <div class="code-editor-card">
+              <div class="code-card-header">
+                <span class="code-card-title">1. Function Definition</span>
+                <span class="code-card-tag">Signature</span>
+              </div>
+              <pre class="slide-code-box"><span class="kw">def</span> <span class="fn">uniform_cost_search</span>(<span class="var">s</span>, <span class="var">goal</span>):</pre>
+              <ul class="slide-explain-list">
+                <li><code>s</code>: Starting node.</li>
+                <li><code>goal</code>: Destination node.</li>
+              </ul>
+            </div>
+
+            <!-- 2. Initialize Data Structures -->
+            <div class="code-editor-card">
+              <div class="code-card-header">
+                <span class="code-card-title">2. Initialize Structures</span>
+                <span class="code-card-tag">Setup</span>
+              </div>
+              <pre class="slide-code-box"><span class="var">FRONTIER</span> = [(<span class="num">0</span>, <span class="var">s</span>)]
+<span class="var">EXPLORED</span> = <span class="fn">set</span>()
+<span class="var">COST</span> = {<span class="var">s</span>: <span class="num">0</span>}
+<span class="var">PARENT</span> = {<span class="var">s</span>: <span class="kw">None</span>}</pre>
+              <ul class="slide-explain-list">
+                <li><code>FRONTIER</code>: Priority queue of candidate nodes.</li>
+                <li><code>EXPLORED</code>: Set of expanded nodes.</li>
+                <li><code>COST</code> &amp; <code>PARENT</code>: Lowest costs and tree.</li>
+              </ul>
+            </div>
+
+            <!-- 3. Main Loop -->
+            <div class="code-editor-card">
+              <div class="code-card-header">
+                <span class="code-card-title">3. Main Loop</span>
+                <span class="code-card-tag">Loop</span>
+              </div>
+              <pre class="slide-code-box"><span class="kw">while</span> <span class="var">FRONTIER</span>:
+    <span class="var">current_cost</span>, <span class="var">u</span> = <span class="fn">ExtractMin</span>(<span class="var">FRONTIER</span>)</pre>
+              <ul class="slide-explain-list">
+                <li>Runs while Frontier has nodes.</li>
+                <li>Pops cheapest node <code>u</code> with cost.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Bottom 2 Columns -->
+          <div class="slide4-bot-row">
+            <!-- 4. Goal Checking and Expansion -->
+            <div class="code-editor-card">
+              <div class="code-card-header">
+                <span class="code-card-title">4. Goal Checking &amp; Expansion</span>
+                <span class="code-card-tag">Check</span>
+              </div>
+              <pre class="slide-code-box"><span class="kw">if</span> <span class="var">u</span> == <span class="var">goal</span>:
+    <span class="kw">return</span> <span class="fn">BuildPath</span>(<span class="var">PARENT</span>, <span class="var">u</span>), <span class="var">COST</span>[<span class="var">u</span>]
+<span class="var">EXPLORED</span>.<span class="fn">add</span>(<span class="var">u</span>)</pre>
+              <ul class="slide-explain-list">
+                <li>If target reached: returns optimal path &amp; cost.</li>
+                <li>Otherwise adds <code>u</code> to visited set.</li>
+              </ul>
+            </div>
+
+            <!-- 5. Explore Neighbors -->
+            <div class="code-editor-card">
+              <div class="code-card-header">
+                <span class="code-card-title">5. Explore Neighbors</span>
+                <span class="code-card-tag">Expansion</span>
+              </div>
+              <pre class="slide-code-box"><span class="kw">for</span> <span class="var">v</span>, <span class="var">edge_cost</span> <span class="kw">in</span> <span class="var">graph</span>[<span class="var">u</span>]:
+    <span class="kw">if</span> <span class="var">v</span> <span class="kw">in</span> <span class="var">EXPLORED</span>:
+        <span class="kw">continue</span>
+    <span class="var">new_cost</span> = <span class="var">COST</span>[<span class="var">u</span>] + <span class="var">edge_cost</span></pre>
+              <ul class="slide-explain-list">
+                <li>Visits all neighbors of <code>u</code>, skipping already explored nodes.</li>
+                <li>Calculates tentative cumulative cost <code>COST[u] + edge_cost</code>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Cost Updating and Final Result -->
+      <section class="slide-pane" id="slide-7" data-slide="7">
+        <div class="slide-top-meta">
+          <span class="slide-badge-category">Slide 7 — Relaxation &amp; Results</span>
+          <h2 class="slide-heading-main">Cost Updating &amp; <span class="accent-text">Final Result</span></h2>
+        </div>
+
+        <div class="slide5-layout">
+          <!-- Left: 3 Code Blocks -->
+          <div class="slide5-left-col">
+            <!-- 1. Check for a Better Path -->
+            <div class="code-editor-card">
+              <div class="code-card-header">
+                <span class="code-card-title">1. Check for Better Path</span>
+                <span class="code-card-tag">Relaxation</span>
+              </div>
+              <pre class="slide-code-box"><span class="kw">if</span> <span class="var">v</span> <span class="kw">not in</span> <span class="var">COST</span> <span class="kw">or</span> <span class="var">new_cost</span> &lt; <span class="var">COST</span>[<span class="var">v</span>]:
+    <span class="var">COST</span>[<span class="var">v</span>] = <span class="var">new_cost</span>
+    <span class="var">PARENT</span>[<span class="var">v</span>] = <span class="var">u</span></pre>
+              <ul class="slide-explain-list">
+                <li>If neighbor is unvisited or shorter path found: updates <code>COST</code> &amp; <code>PARENT</code>.</li>
+              </ul>
+            </div>
+
+            <!-- 2. Update Frontier -->
+            <div class="code-editor-card">
+              <div class="code-card-header">
+                <span class="code-card-title">2. Update Frontier</span>
+                <span class="code-card-tag">Queue</span>
+              </div>
+              <pre class="slide-code-box"><span class="var">found</span> = <span class="kw">False</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="var">FRONTIER</span>)):
+    <span class="kw">if</span> <span class="var">FRONTIER</span>[<span class="var">i</span>][<span class="num">1</span>] == <span class="var">v</span>:
+        <span class="var">FRONTIER</span>[<span class="var">i</span>] = (<span class="var">new_cost</span>, <span class="var">v</span>); <span class="var">found</span> = <span class="kw">True</span>; <span class="kw">break</span>
+<span class="kw">if not</span> <span class="var">found</span>: <span class="var">FRONTIER</span>.<span class="fn">append</span>((<span class="var">new_cost</span>, <span class="var">v</span>))</pre>
+            </div>
+
+            <!-- 3. Unreachable -->
+            <div class="code-editor-card">
+              <div class="code-card-header">
+                <span class="code-card-title">3. Unreachable Goals</span>
+                <span class="code-card-tag">Fallback</span>
+              </div>
+              <pre class="slide-code-box"><span class="kw">return</span> [], <span class="fn">float</span>(<span class="num">'inf'</span>)</pre>
+            </div>
+          </div>
+
+          <!-- Right: Final Result Grand Card -->
+          <div class="final-result-card">
+            <div class="final-result-header">
+              <h4>4. Final Result (Multi-Branch Graph 1)</h4>
+              <span class="final-route-badge">S ➔ G</span>
+            </div>
+
+            <!-- Graph 1 Visual Map Preview (Green Path Traversed) -->
+            <div class="slide-graph-container">
+              <svg class="slide-graph-svg" viewBox="50 65 845 220" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <marker id="edge-arrow-green" viewBox="0 0 10 10" refX="24" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#10b981" />
+                  </marker>
+                  <marker id="edge-arrow-gray" viewBox="0 0 10 10" refX="23" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                    <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#94a3b8" />
+                  </marker>
+                </defs>
+
+                <!-- Inactive Graph Edges (Gray) -->
+                <g class="inactive-edges" fill="none" stroke="#cbd5e1" stroke-width="2.5" marker-end="url(#edge-arrow-gray)">
+                  <line x1="90" y1="165" x2="265" y2="235" />
+                  <line x1="265" y1="105" x2="465" y2="225" />
+                  <line x1="265" y1="235" x2="465" y2="225" />
+                  <path d="M 265 235 Q 465 295 665 225" />
+                  <line x1="465" y1="225" x2="665" y2="225" />
+                  <path d="M 465 225 Q 665 258 855 165" />
+                  <line x1="665" y1="225" x2="855" y2="165" />
+                </g>
+
+                <!-- Inactive Edge Weight Badges -->
+                <g class="edge-weights-inactive">
+                  <g><rect x="160" y="202" width="24" height="15" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/><text x="172" y="213" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="10.5" font-weight="700" fill="#64748b">70</text></g>
+                  <g><rect x="350" y="160" width="28" height="15" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/><text x="364" y="171" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="10.5" font-weight="700" fill="#64748b">100</text></g>
+                  <g><rect x="353" y="232" width="24" height="15" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/><text x="365" y="243" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="10.5" font-weight="700" fill="#64748b">30</text></g>
+                  <g><rect x="453" y="270" width="24" height="15" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/><text x="465" y="281" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="10.5" font-weight="700" fill="#64748b">80</text></g>
+                  <g><rect x="553" y="217" width="24" height="15" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/><text x="565" y="228" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="10.5" font-weight="700" fill="#64748b">20</text></g>
+                  <g><rect x="663" y="235" width="24" height="15" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/><text x="675" y="246" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="10.5" font-weight="700" fill="#64748b">90</text></g>
+                  <g><rect x="758" y="197" width="24" height="15" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/><text x="770" y="208" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="10.5" font-weight="700" fill="#64748b">60</text></g>
+                </g>
+
+                <!-- Traversed Optimal Path Glow (Green) -->
+                <g fill="none" stroke="#a7f3d0" stroke-width="9" stroke-linecap="round" opacity="0.7">
+                  <line x1="90" y1="165" x2="265" y2="105" />
+                  <line x1="265" y1="105" x2="465" y2="95" />
+                  <line x1="465" y1="95" x2="665" y2="95" />
+                  <line x1="665" y1="95" x2="855" y2="165" />
+                </g>
+
+                <!-- Traversed Optimal Path Solid Lines (Vibrant Emerald) -->
+                <g fill="none" stroke="#10b981" stroke-width="4.5" stroke-linecap="round" marker-end="url(#edge-arrow-green)">
+                  <line x1="90" y1="165" x2="265" y2="105" />
+                  <line x1="265" y1="105" x2="465" y2="95" />
+                  <line x1="465" y1="95" x2="665" y2="95" />
+                  <line x1="665" y1="95" x2="855" y2="165" />
+                </g>
+
+                <!-- Optimal Path Weight Badges (Highlighted Green) -->
+                <g class="edge-weights-active">
+                  <g><rect x="160" y="123" width="26" height="16" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.8"/><text x="173" y="135" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#047857">40</text></g>
+                  <g><rect x="352" y="87" width="26" height="16" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.8"/><text x="365" y="99" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#047857">60</text></g>
+                  <g><rect x="552" y="82" width="26" height="16" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.8"/><text x="565" y="94" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#047857">40</text></g>
+                  <g><rect x="757" y="120" width="26" height="16" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.8"/><text x="770" y="132" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="11" font-weight="800" fill="#047857">30</text></g>
+                </g>
+
+                <!-- Inactive Graph Nodes (B, D, E) -->
+                <g class="normal-nodes">
+                  <g>
+                    <circle cx="265" cy="235" r="17" fill="#ffffff" stroke="#1a202c" stroke-width="2.5" />
+                    <text x="265" y="241" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="700" fill="#1a202c">B</text>
+                  </g>
+                  <g>
+                    <circle cx="465" cy="225" r="17" fill="#ffffff" stroke="#1a202c" stroke-width="2.5" />
+                    <text x="465" y="231" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="700" fill="#1a202c">D</text>
+                  </g>
+                  <g>
+                    <circle cx="665" cy="225" r="17" fill="#ffffff" stroke="#1a202c" stroke-width="2.5" />
+                    <text x="665" y="231" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="700" fill="#1a202c">E</text>
+                  </g>
+                </g>
+
+                <!-- Optimal Path Traversed Nodes (S, A, C, F, G) -->
+                <g class="path-nodes">
+                  <!-- S: Start Node -->
+                  <g>
+                    <circle cx="90" cy="165" r="18" fill="#10b981" stroke="#065f46" stroke-width="3" />
+                    <text x="90" y="171" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="16" font-weight="700" fill="#ffffff">S</text>
+                  </g>
+                  <!-- A -->
+                  <g>
+                    <circle cx="265" cy="105" r="17" fill="#d1fae5" stroke="#10b981" stroke-width="3" />
+                    <text x="265" y="111" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="700" fill="#065f46">A</text>
+                  </g>
+                  <!-- C -->
+                  <g>
+                    <circle cx="465" cy="95" r="17" fill="#d1fae5" stroke="#10b981" stroke-width="3" />
+                    <text x="465" y="101" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="700" fill="#065f46">C</text>
+                  </g>
+                  <!-- F -->
+                  <g>
+                    <circle cx="665" cy="95" r="17" fill="#d1fae5" stroke="#10b981" stroke-width="3" />
+                    <text x="665" y="101" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="15" font-weight="700" fill="#065f46">F</text>
+                  </g>
+                  <!-- G: Goal Node -->
+                  <g>
+                    <circle cx="855" cy="165" r="18" fill="#10b981" stroke="#065f46" stroke-width="3.5" />
+                    <text x="855" y="171" text-anchor="middle" font-family="'Fredoka', sans-serif" font-size="16" font-weight="700" fill="#ffffff">G</text>
+                  </g>
+                </g>
+              </svg>
+            </div>
+
+            <div class="final-path-flow">
+              <span class="path-chip start">S</span>
+              <span class="path-chip-arrow">➔</span>
+              <span class="path-chip">A</span>
+              <span class="path-chip-arrow">➔</span>
+              <span class="path-chip">C</span>
+              <span class="path-chip-arrow">➔</span>
+              <span class="path-chip">F</span>
+              <span class="path-chip-arrow">➔</span>
+              <span class="path-chip goal">G</span>
+            </div>
+
+            <div class="final-cost-box">
+              Total Cost Calculation:<br>
+              40 (S→A) + 60 (A→C) + 40 (C→F) + 30 (F→G) = <strong>170</strong>
+            </div>
+
+            <div>
+              <div style="font-weight: 800; font-size: 0.82rem; color: #475569; margin-bottom: 4px;">Program Output:</div>
+              <pre class="final-output-box">Path: ['S', 'A', 'C', 'F', 'G']
+Total Cost: 170</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Iteration Steps (4x2 Grid) + Launcher Button -->
+      <section class="slide-pane" id="slide-8" data-slide="8">
+        <div class="slide-top-meta">
+          <span class="slide-badge-category">Slide 8 — Execution Cycle</span>
+          <h2 class="slide-heading-main">How UCS Works in <span class="accent-text">Each Iteration</span></h2>
+        </div>
+
+        <!-- 8 Steps in 4x2 Clean Grid -->
+        <div class="slide6-grid">
+          <div class="step-box">
+            <div class="step-badge-row">
+              <span class="step-num">1</span>
+              <span class="step-title">Select Min Cost</span>
+            </div>
+            <p class="step-desc">Extracts &amp; pops node with lowest cumulative cost from Frontier.</p>
+          </div>
+
+          <div class="step-box">
+            <div class="step-badge-row">
+              <span class="step-num">2</span>
+              <span class="step-title">Check Goal</span>
+            </div>
+            <p class="step-desc">Checks if popped node is goal. If so, returns optimal path and cost.</p>
+          </div>
+
+          <div class="step-box">
+            <div class="step-badge-row">
+              <span class="step-num">3</span>
+              <span class="step-title">Mark Explored</span>
+            </div>
+            <p class="step-desc">Adds node to Explored set so it is never re-processed.</p>
+          </div>
+
+          <div class="step-box">
+            <div class="step-badge-row">
+              <span class="step-num">4</span>
+              <span class="step-title">Explore Neighbors</span>
+            </div>
+            <p class="step-desc">Examines outgoing edges to all unvisited neighboring nodes.</p>
+          </div>
+
+          <div class="step-box">
+            <div class="step-badge-row">
+              <span class="step-num">5</span>
+              <span class="step-title">Calculate Costs</span>
+            </div>
+            <p class="step-desc">Computes cumulative cost from start to each neighbor via current node.</p>
+          </div>
+
+          <div class="step-box">
+            <div class="step-badge-row">
+              <span class="step-num">6</span>
+              <span class="step-title">Update Costs</span>
+            </div>
+            <p class="step-desc">If neighbor is new or cheaper path found, updates its cost and parent.</p>
+          </div>
+
+          <div class="step-box">
+            <div class="step-badge-row">
+              <span class="step-num">7</span>
+              <span class="step-title">Update Frontier</span>
+            </div>
+            <p class="step-desc">Adds new nodes or updates existing nodes in priority queue.</p>
+          </div>
+
+          <div class="step-box">
+            <div class="step-badge-row">
+              <span class="step-num">8</span>
+              <span class="step-title">Repeat Process</span>
+            </div>
+            <p class="step-desc">Continues until goal is popped or Frontier becomes completely empty.</p>
+          </div>
+        </div>
+
+        <!-- Call to Action Bar Directing to Visualizer -->
+        <div class="slide6-cta-bar">
+          <span class="slide6-cta-text">Ready to watch Uniform Cost Search solve both graphs step-by-step?</span>
+          <button id="btn-slide-launch-visualizer" class="btn-adv btn-launch-viz" type="button">
+            <span>Launch Visualizer ▶</span>
+          </button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Bottom Navigation Dock (Hidden in Fullscreen) -->
+    <div class="slides-bottom-dock">
+      <div class="slides-dock-actions">
+        <button id="btn-slide-prev" class="btn-slide-nav" type="button" title="Previous Slide (← / PgUp)">
+          <span>◀ Prev</span>
+        </button>
+        <button id="btn-slide-next" class="btn-slide-nav btn-primary-next" type="button" title="Next Slide (→ / Space / PgDn)">
+          <span>Next ▶</span>
+        </button>
+      </div>
+
+      <div class="slides-dots-nav" id="slides-dots-nav">
+        <button class="slide-dot active" data-slide="1" title="Slide 1: Cover"></button>
+        <button class="slide-dot" data-slide="2" title="Slide 2: Introduction"></button>
+        <button class="slide-dot" data-slide="3" title="Slide 3: Full Code"></button>
+        <button class="slide-dot" data-slide="4" title="Slide 4: Graph Definition &amp; Topology"></button>
+        <button class="slide-dot" data-slide="5" title="Slide 5: Helper Functions"></button>
+        <button class="slide-dot" data-slide="6" title="Slide 6: Initialization &amp; Main Loop"></button>
+        <button class="slide-dot" data-slide="7" title="Slide 7: Relaxation &amp; Final Result"></button>
+        <button class="slide-dot" data-slide="8" title="Slide 8: Iteration Steps"></button>
+      </div>
+
+      <div class="slides-dock-hint">
+        <span class="slides-counter-badge"><strong id="slides-current-num">1</strong> / 8</span>
+        <span>• Use <kbd>←</kbd> <kbd>→</kbd> <kbd>Space</kbd> or <kbd>Esc</kbd></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="brand" id="brand-home-trigger" title="Click to view Title Screen &amp; Authors"
+      style="cursor: pointer;">
+      <div class="logo-box">UCS</div>
+      <div>
+        <h1>Uniform Cost Search</h1>
+        <span class="subtitle" id="header-graph-title">Graph 1 (Multi-Branch: S ➔ G)</span>
+      </div>
+    </div>
+
+    <!-- Graph Switcher / Customizer Trigger -->
+    <button id="btn-open-graph-selector" class="btn-adv btn-graph-picker" title="Switch or Customize Graph">
+      <span class="picker-label">GRAPH:</span>
+      <strong id="active-graph-badge">Graph 1 (S ➔ G)</strong>
+      <span class="picker-arrow">▼ Change</span>
+    </button>
+
+    <!-- Controls Toolbar (No Emojis) -->
+    <div class="controls-toolbar">
+      <div class="btn-group">
+        <button id="btn-prev" class="btn-adv" title="Previous Step">Prev</button>
+        <button id="btn-play" class="btn-adv btn-play-action" title="Play or Pause">
+          <span id="play-text">Play</span>
+        </button>
+        <button id="btn-next" class="btn-adv" title="Next Step">Next</button>
+        <button id="btn-reset" class="btn-adv btn-marceline" title="Reset">Reset</button>
+      </div>
+
+      <div class="speed-control">
+        <label for="speed-range">Speed:</label>
+        <input type="range" id="speed-range" min="200" max="2200" value="900" step="100">
+        <span id="speed-label">0.9s</span>
+      </div>
+
+      <div class="extra-controls">
+        <button id="btn-show-slides" class="btn-adv btn-slides-trigger" title="Open Fullscreen Slides Presentation">
+          <span>Slides Deck 🗂️</span>
+        </button>
+        <button id="btn-show-intro" class="btn-adv btn-utility" title="Cover Page / Authors">
+          <span>Title Screen</span>
+        </button>
+        <button id="btn-sound" class="btn-adv btn-utility" title="Toggle Sound">
+          <span id="sound-label">Sound: ON</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Step Status Banner -->
+  <div class="status-banner">
+    <div class="step-pill" id="step-number">Step 0 / 0</div>
+    <div class="status-bubble" id="step-message">
+      Press Play or Next to start the search.
+    </div>
+    <div class="current-node-badge" id="standing-badge">
+      <span class="badge-title">CURRENT:</span>
+      <span class="badge-value" id="current-node-val">—</span>
+    </div>
+  </div>
+
+  <!-- Main Grid Layout -->
+  <main class="main-layout">
+
+    <!-- Left Column: Graph Canvas + Data Structures Under Graph -->
+    <section class="left-column">
+
+      <!-- Graph Canvas Card -->
+      <div class="card graph-card">
+        <div class="card-header">
+          <div class="header-title">
+            <span class="badge-at badge-graph">GRAPH CANVAS</span>
+            <h3 id="canvas-graph-title">Uniform Cost Search (UCS) Graph</h3>
+          </div>
+          <div class="graph-legend">
+            <span class="legend-pill leg-start">S: Start</span>
+            <span class="legend-pill leg-goal">M: Goal</span>
+            <span class="legend-pill leg-curr">Current</span>
+            <span class="legend-pill leg-front">In Frontier</span>
+            <span class="legend-pill leg-exp">Explored</span>
+            <span class="legend-pill leg-path">Optimal Path</span>
+          </div>
+        </div>
+
+        <div class="canvas-wrapper">
+          <svg id="graph-svg" viewBox="0 0 960 360" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <marker id="arrow-default" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6"
+                orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#334155" stroke="#1f2937" stroke-width="0.8" />
+              </marker>
+              <marker id="arrow-active" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7"
+                orient="auto-start-reverse">
+                <path d="M 0 1 L 9 5 L 0 9 z" fill="#0ea5e9" stroke="#1f2937" stroke-width="0.8" />
+              </marker>
+              <marker id="arrow-path" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="8" markerHeight="8"
+                orient="auto-start-reverse">
+                <path d="M 0 1 L 9 5 L 0 9 z" fill="#10b981" stroke="#1f2937" stroke-width="1" />
+              </marker>
+            </defs>
+
+            <!-- SVG Layers -->
+            <g id="edges-layer"></g>
+            <g id="nodes-layer"></g>
+          </svg>
+        </div>
+
+        <!-- Timeline Scrubber -->
+        <div class="timeline-box">
+          <span class="timeline-hint">Step Timeline Scrubber:</span>
+          <input type="range" id="timeline-slider" min="0" max="0" value="0">
+        </div>
+      </div>
+
+      <!-- FRONTIER & EXPLORED (Positioned directly under the Graph) -->
+      <div class="queues-row">
+        <!-- FRONTIER Priority Queue Card -->
+        <div class="queue-card frontier-card">
+          <div class="queue-card-header">
+            <div class="queue-title-wrap">
+              <span class="queue-badge badge-frontier">FRONTIER</span>
+              <span class="queue-sub">Priority Queue (Min-Cost Order)</span>
+            </div>
+            <span class="count-pill pill-jake" id="frontier-count">0</span>
+          </div>
+
+          <div class="pq-track-box">
+            <div class="pq-head-banner">
+              <span class="pq-arrow-icon">▼</span>
+              <span>QUEUE HEAD (MIN COST)</span>
+            </div>
+            <div class="pq-items-track" id="frontier-items">
+              <span class="empty-text">Queue Empty</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXPLORED Visited Set Card -->
+        <div class="queue-card explored-card">
+          <div class="queue-card-header">
+            <div class="queue-title-wrap">
+              <span class="queue-badge badge-explored">EXPLORED</span>
+              <span class="queue-sub">Visited Set (Closed List)</span>
+            </div>
+            <span class="count-pill pill-bubblegum" id="explored-count">0</span>
+          </div>
+
+          <div class="set-items-vault" id="explored-items">
+            <span class="empty-text">Set Empty</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- COST & PARENT dictionaries (Positioned at the very bottom) -->
+      <div class="dicts-row">
+        <div class="dict-card">
+          <div class="dict-header">COST DICTIONARY:</div>
+          <div class="dict-pills" id="cost-table">—</div>
+        </div>
+        <div class="dict-card">
+          <div class="dict-header">PARENT DICTIONARY:</div>
+          <div class="dict-pills" id="parent-table">—</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Right Column: Algorithm State (Top) + Code & Steady Trace Inspector (Bottom) -->
+    <section class="right-column">
+
+      <!-- 1. Algorithm State (Compact & Light, Above Code) -->
+      <div class="card state-compact-card">
+        <div class="state-header-row">
+          <div class="state-title-wrap">
+            <span class="state-badge">ALGORITHM STATE</span>
+            <span class="state-action-tag" id="trace-action-pill">INITIALIZE</span>
+          </div>
+          <div class="active-line-badge" id="trace-line-pill">Line 26</div>
+        </div>
+
+        <div class="state-content-grid">
+          <!-- Extracted Node Capsule -->
+          <div class="extracted-slot-wrap">
+            <span class="slot-lbl">POPPED (u):</span>
+            <div id="current-capsule-slot" class="slot-container">
+              <span class="empty-text">None</span>
+            </div>
+          </div>
+
+          <!-- Path So Far & Cost -->
+          <div class="path-so-far-wrap">
+            <div class="path-meta-row">
+              <span class="slot-lbl">PATH SO FAR:</span>
+              <span class="path-cost-tag">Cost: <strong id="active-path-cost">0</strong></span>
+            </div>
+            <div class="path-sequence" id="step-path-sequence">
+              <span class="node-step-tag">S</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Algorithm Code & Live Trace (Single Piece, NO scrollbar, rock-solid steady sizing) -->
+      <div class="card code-tracer-card">
+        <div class="tracer-header">
+          <div class="tracer-title-group">
+            <span class="tracer-badge">PYTHON SOURCE</span>
+            <h4>ucs.py — uniform_cost_search()</h4>
+          </div>
+          <span class="tracer-file-tag" id="live-line-indicator">Executing: Line 26</span>
+        </div>
+
+        <!-- Single Piece Code Block (All lines rendered completely, NO inner scrollbar!) -->
+        <div class="code-editor-pane">
+          <div class="code-editor-header">
+            <span class="dot-btn red-dot"></span>
+            <span class="dot-btn yellow-dot"></span>
+            <span class="dot-btn green-dot"></span>
+            <span class="editor-filename">ucs.py</span>
+          </div>
+          <div class="code-editor-full" id="python-code">
+            <div class="code-line" id="code-l1"><span class="line-ptr"></span><span class="line-num">1</span><span class="line-code">def <span class="code-fn-btn" data-fn="uniform_cost_search" title="Click to inspect uniform_cost_search() from ucs.py">uniform_cost_search</span>(s, goal):</span></div>
+            <div class="code-line" id="code-l2"><span class="line-ptr"></span><span class="line-num">2</span><span class="line-code">    FRONTIER = [(0, s)]</span></div>
+            <div class="code-line" id="code-l3"><span class="line-ptr"></span><span class="line-num">3</span><span class="line-code">    EXPLORED = set()</span></div>
+            <div class="code-line" id="code-l4"><span class="line-ptr"></span><span class="line-num">4</span><span class="line-code">    COST = {s: 0}</span></div>
+            <div class="code-line" id="code-l5"><span class="line-ptr"></span><span class="line-num">5</span><span class="line-code">    PARENT = {s: None}</span></div>
+            <div class="code-line" id="code-l6"><span class="line-ptr"></span><span class="line-num">6</span><span class="line-code">    while FRONTIER:</span></div>
+            <div class="code-line" id="code-l7"><span class="line-ptr"></span><span class="line-num">7</span><span class="line-code">        current_cost, u = <span class="code-fn-btn" data-fn="ExtractMin" title="Click to inspect ExtractMin() from ucs.py">ExtractMin</span>(FRONTIER)</span></div>
+            <div class="code-line" id="code-l8"><span class="line-ptr"></span><span class="line-num">8</span><span class="line-code">        if u == goal:</span></div>
+            <div class="code-line" id="code-l9"><span class="line-ptr"></span><span class="line-num">9</span><span class="line-code">            return <span class="code-fn-btn" data-fn="BuildPath" title="Click to inspect BuildPath() from ucs.py">BuildPath</span>(PARENT, u), COST[u]</span></div>
+            <div class="code-line" id="code-l10"><span class="line-ptr"></span><span class="line-num">10</span><span class="line-code">        EXPLORED.add(u)</span></div>
+            <div class="code-line" id="code-l11"><span class="line-ptr"></span><span class="line-num">11</span><span class="line-code">        for v, edge_cost in graph[u]:</span></div>
+            <div class="code-line" id="code-l12"><span class="line-ptr"></span><span class="line-num">12</span><span class="line-code">            if v in EXPLORED:</span></div>
+            <div class="code-line" id="code-l13"><span class="line-ptr"></span><span class="line-num">13</span><span class="line-code">                continue</span></div>
+            <div class="code-line" id="code-l14"><span class="line-ptr"></span><span class="line-num">14</span><span class="line-code">            new_cost = COST[u] + edge_cost</span></div>
+            <div class="code-line" id="code-l15"><span class="line-ptr"></span><span class="line-num">15</span><span class="line-code">            if v not in COST or new_cost &lt; COST[v]:</span></div>
+            <div class="code-line" id="code-l16"><span class="line-ptr"></span><span class="line-num">16</span><span class="line-code">                COST[v] = new_cost</span></div>
+            <div class="code-line" id="code-l17"><span class="line-ptr"></span><span class="line-num">17</span><span class="line-code">                PARENT[v] = u</span></div>
+            <div class="code-line" id="code-l18"><span class="line-ptr"></span><span class="line-num">18</span><span class="line-code">                <span class="code-fn-btn" data-fn="UpdatePriorityQueue" title="Click to inspect UpdatePriorityQueue() from ucs.py">UpdatePriorityQueue</span>(FRONTIER, v, new_cost)</span></div>
+            <div class="code-line" id="code-l19"><span class="line-ptr"></span><span class="line-num">19</span><span class="line-code">    return [], float('inf')</span></div>
+          </div>
+        </div>
+
+        <!-- Steady Fixed-Height Live Trace Box (Zero Jumping!) -->
+        <div class="trace-steady-box">
+          <div class="trace-row code-row">
+            <span class="trace-lbl">Statement:</span>
+            <code class="trace-val-code" id="trace-code-snippet">FRONTIER = [(0, s)]</code>
+          </div>
+          <div class="trace-row eval-row">
+            <span class="trace-lbl">Variables:</span>
+            <span class="trace-val-eval" id="trace-eval-values">s = 'S', goal = 'M'</span>
+          </div>
+          <div class="trace-row desc-row">
+            <span class="trace-lbl">Trace:</span>
+            <span class="trace-val-desc" id="trace-explanation-text">Initialized priority queue FRONTIER with start node
+              'S' at cost 0.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Final Goal Banner (Celebration when Goal is reached) -->
+      <div id="final-result-banner" class="celebration-banner hidden">
+        <div class="celeb-top-row">
+          <span class="celeb-badge">SEARCH COMPLETE</span>
+          <span class="celeb-algo-tag">UCS Optimal</span>
+        </div>
+
+        <h4 class="celeb-header">Optimal Path Found</h4>
+
+        <div class="celeb-path-container">
+          <span class="celeb-path-label">Shortest Route from S to M:</span>
+          <div class="celeb-nodes-flow" id="result-path-nodes">
+            <!-- Dynamically populated as node chips: [S] ➔ [B] ➔ ... -->
+          </div>
+        </div>
+
+        <div class="celeb-stats-grid">
+          <div class="celeb-stat-card">
+            <span class="stat-title">Total Cost</span>
+            <span class="stat-num stat-cost" id="result-cost-val">450</span>
+          </div>
+          <div class="celeb-stat-card">
+            <span class="stat-title">Path Nodes</span>
+            <span class="stat-num" id="result-nodes-count">9</span>
+          </div>
+          <div class="celeb-stat-card">
+            <span class="stat-title">Algorithm</span>
+            <span class="stat-num stat-algo">UCS</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

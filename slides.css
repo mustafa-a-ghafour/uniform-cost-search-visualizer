@@ -1,0 +1,1560 @@
+/* ==========================================================================
+   Full Screen Presentation Slides System - Adventure Time Edition
+   Uniform Cost Search (UCS)
+   Authors: Mustafa Ahmed Ghafour & Mohammed Mahdi Salih
+   ========================================================================== */
+
+:root {
+  --slide-bg: #fcf7e8;
+  --slide-ink: #1a202c;
+  --slide-jake: #f9c427;
+  --slide-jake-light: #fef3c7;
+  --slide-finn: #34b4e4;
+  --slide-finn-light: #e0f2fe;
+  --slide-bmo: #52c9a5;
+  --slide-bmo-light: #d1fae5;
+  --slide-marceline: #e12d39;
+  --slide-marceline-light: #fee2e2;
+  --slide-card-bg: #ffffff;
+}
+
+/* Fullscreen Slides Overlay Backdrop */
+.slides-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background-color: var(--slide-bg);
+  background-image: radial-gradient(#d6ceb8 1.4px, transparent 1.4px);
+  background-size: 24px 24px;
+  color: var(--slide-ink);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+  user-select: text;
+}
+
+.slides-overlay.hidden {
+  display: none !important;
+}
+
+/* Top Slides Header Bar */
+.slides-header-bar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px;
+  background: #ffffff;
+  border-bottom: 3px solid var(--slide-ink);
+  box-shadow: 0 4px 0 rgba(26, 32, 44, 0.08);
+  flex-shrink: 0;
+}
+
+.slides-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.slides-project-tag {
+  background: var(--slide-jake);
+  color: #78350f;
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  padding: 4px 12px;
+  border-radius: 8px;
+  border: 2px solid var(--slide-ink);
+  box-shadow: 2px 2px 0 var(--slide-ink);
+  text-transform: uppercase;
+}
+
+.slides-header-title {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--slide-ink);
+}
+
+.slides-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-slide-nav {
+  background: #ffffff;
+  color: var(--slide-ink);
+  border: 2.5px solid var(--slide-ink);
+  border-radius: 10px;
+  box-shadow: 2.5px 2.5px 0 var(--slide-ink);
+  padding: 6px 14px;
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+}
+
+.btn-slide-nav:hover {
+  background: var(--slide-finn-light);
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0 var(--slide-ink);
+}
+
+.btn-slide-nav:active {
+  transform: translateY(1px);
+  box-shadow: 1.5px 1.5px 0 var(--slide-ink);
+}
+
+.btn-slide-close {
+  background: var(--slide-marceline);
+  color: #ffffff;
+}
+
+.btn-slide-close:hover {
+  background: #b91c1c;
+  color: #ffffff;
+}
+
+/* Progress Track */
+.slides-progress-track {
+  width: 100%;
+  height: 5px;
+  background: rgba(26, 32, 44, 0.12);
+  flex-shrink: 0;
+}
+
+.slides-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--slide-finn), var(--slide-jake));
+  transition: width 0.25s ease-out;
+}
+
+/* Viewport - Strictly Zero Scroll & Centered */
+.slides-viewport {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 0;
+}
+
+/* Slide Pane - Proportionate, Content-Hugging & Perfectly Centered */
+.slide-pane {
+  display: none;
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  max-height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  animation: slidePopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  gap: 10px;
+}
+
+.slide-pane.active {
+  display: flex;
+}
+
+@keyframes slidePopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Top Meta Header Inside Slide */
+.slide-top-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+  flex-shrink: 0;
+}
+
+.slide-badge-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--slide-finn-light);
+  color: #0369a1;
+  border: 2px solid var(--slide-ink);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0 var(--slide-ink);
+  padding: 3px 10px;
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.slide-heading-main {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--slide-ink);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.slide-heading-main .accent-text {
+  color: #0284c7;
+}
+
+/* Content Flex Container */
+.slide-body-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Cards Base */
+.adv-card {
+  background: var(--slide-card-bg);
+  border: 2.5px solid var(--slide-ink);
+  border-radius: 14px;
+  box-shadow: 3.5px 3.5px 0 var(--slide-ink);
+  padding: 10px 14px;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Slide 1: Cover Slide (Tight, Balanced, High Contrast)
+   ========================================================================== */
+.slide-cover-card {
+  background: #ffffff;
+  border: 3.5px solid var(--slide-ink);
+  border-radius: 22px;
+  padding: 26px 36px;
+  text-align: center;
+  box-shadow: 6px 6px 0 var(--slide-ink);
+  max-width: 940px;
+  width: 95%;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-cover-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(90deg, var(--slide-jake), var(--slide-finn), var(--slide-bmo));
+}
+
+.cover-pill-label {
+  display: inline-block;
+  background: var(--slide-jake-light);
+  color: #92400e;
+  border: 2px solid var(--slide-ink);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 var(--slide-ink);
+  padding: 4px 16px;
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.cover-big-title {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 2.85rem;
+  font-weight: 700;
+  color: var(--slide-ink);
+  margin: 0 0 6px 0;
+  line-height: 1.15;
+}
+
+.cover-sub-title {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.22rem;
+  color: #0284c7;
+  font-weight: 800;
+  margin: 0 auto 16px auto;
+}
+
+.cover-authors-container {
+  background: #f8fafc;
+  border: 2.5px solid var(--slide-ink);
+  border-radius: 14px;
+  box-shadow: 3px 3px 0 var(--slide-ink);
+  padding: 12px 22px;
+  max-width: 860px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto 16px auto;
+}
+
+.cover-authors-tag {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.cover-authors-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.cover-author-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 2px solid var(--slide-ink);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 var(--slide-ink);
+  padding: 6px 16px;
+  flex-shrink: 0;
+}
+
+.author-round-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #ffffff;
+  border: 2px solid var(--slide-ink);
+  flex-shrink: 0;
+}
+
+.author-round-icon.mustafa {
+  background: var(--slide-jake);
+  color: #78350f;
+}
+
+.author-round-icon.mohammed {
+  background: var(--slide-finn);
+  color: #0c4a6e;
+}
+
+.author-label-name {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--slide-ink);
+  white-space: nowrap;
+}
+
+.cover-authors-and {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.35rem;
+  color: var(--slide-jake);
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.cover-supervisor-row {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1.5px dashed #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.supervisor-label {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.supervisor-name {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: #0369a1;
+  background: #e0f2fe;
+  border: 1.5px solid var(--slide-ink);
+  border-radius: 8px;
+  padding: 3px 14px;
+}
+
+.cover-meta-info {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #64748b;
+}
+
+/* ==========================================================================
+   Slide 2: Introduction to UCS (Full Width Balanced Rows Layout)
+   ========================================================================== */
+.slide-lead-box {
+  background: var(--slide-finn-light);
+  border: 2.5px solid var(--slide-ink);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 var(--slide-ink);
+  padding: 10px 16px;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  color: var(--slide-ink);
+}
+
+.slide-lead-box strong {
+  color: #0369a1;
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.1rem;
+}
+
+.slide2-how-card {
+  padding: 10px 16px;
+}
+
+.slide2-how-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.slide2-how-grid li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.slide2-how-grid li::before {
+  content: "➔";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #0284c7;
+  font-weight: 900;
+  font-size: 0.95rem;
+}
+
+.slide2-how-grid li.col-span-2 {
+  grid-column: span 2;
+}
+
+.slide2-row-boxes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.slide-sub-title {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.slide-mini-feature {
+  background: #ffffff;
+  border: 2.5px solid var(--slide-ink);
+  border-radius: 12px;
+  box-shadow: 2.5px 2.5px 0 var(--slide-ink);
+  padding: 8px 14px;
+}
+
+.slide-mini-feature.pros {
+  border-left: 6px solid var(--slide-bmo);
+}
+
+.slide-mini-feature.cons {
+  border-left: 6px solid var(--slide-marceline);
+}
+
+.slide-mini-feature.apps {
+  border-left: 6px solid var(--slide-finn);
+}
+
+.mini-feature-header {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.slide-mini-feature.pros .mini-feature-header {
+  color: #047857;
+}
+
+.slide-mini-feature.cons .mini-feature-header {
+  color: #b91c1c;
+}
+
+.slide-mini-feature.apps .mini-feature-header {
+  color: #0369a1;
+}
+
+.mini-feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.mini-feature-list li {
+  position: relative;
+  padding-left: 18px;
+  line-height: 1.35;
+}
+
+.slide-mini-feature.pros li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #059669;
+  font-weight: 900;
+}
+
+.slide-mini-feature.cons li::before {
+  content: "✗";
+  position: absolute;
+  left: 0;
+  color: #dc2626;
+  font-weight: 900;
+}
+
+.slide-mini-feature.apps li::before {
+  content: "•";
+  position: absolute;
+  left: 2px;
+  color: #0284c7;
+  font-weight: 900;
+  font-size: 1.2rem;
+  line-height: 0.9;
+}
+
+/* ==========================================================================
+   Slide 3: Full Complete Code Grid (Side-by-Side)
+   ========================================================================== */
+.full-code-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 14px;
+}
+
+.full-code-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.code-editor-card.full-editor {
+  padding: 8px 12px;
+}
+
+.code-editor-card.full-editor .slide-code-box {
+  font-size: 0.84rem;
+  line-height: 1.4;
+  padding: 8px 12px;
+}
+
+:fullscreen .code-editor-card.full-editor .slide-code-box,
+.slides-overlay.is-fullscreen .code-editor-card.full-editor .slide-code-box {
+  font-size: 0.98rem;
+  line-height: 1.46;
+  padding: 10px 14px;
+}
+
+.full-code-note {
+  background: #f8fafc;
+  padding: 8px 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #334155;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.full-code-note strong {
+  color: #0369a1;
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   Slide 4: Graph Topology & Code (Side-by-Side)
+   ========================================================================== */
+.slide-graph-def-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 14px;
+  min-height: 0;
+}
+
+.slide-graph-code-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+
+.slide-graph-code-col .slide-code-box {
+  font-size: 0.81rem;
+  line-height: 1.36;
+  padding: 8px 12px;
+}
+
+:fullscreen .slide-graph-code-col .slide-code-box,
+.slides-overlay.is-fullscreen .slide-graph-code-col .slide-code-box {
+  font-size: 0.94rem;
+  line-height: 1.44;
+  padding: 10px 14px;
+}
+
+.graph-meta-pills-card {
+  background: #f8fafc;
+  border: 2px solid var(--slide-ink);
+  border-radius: 12px;
+  box-shadow: 2.5px 2.5px 0 var(--slide-ink);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.graph-meta-pill-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.graph-meta-pill-item .pill-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1.5px solid var(--slide-ink);
+  border-radius: 6px;
+  padding: 1px 7px;
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Right Column: Visual Canvas Card */
+.slide-graph-view-card {
+  background: #ffffff;
+  border: 3px solid var(--slide-ink);
+  border-radius: 16px;
+  box-shadow: 4px 4px 0 var(--slide-ink);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 0;
+}
+
+.slide-graph-view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.slide-graph-view-header h4 {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.15rem;
+  color: var(--slide-ink);
+  margin: 0;
+}
+
+.slide-graph-legend-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.graph-legend-badge {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1.5px solid var(--slide-ink);
+}
+
+.graph-legend-badge.start { background: #d1fae5; color: #065f46; }
+.graph-legend-badge.goal { background: #fee2e2; color: #991b1b; }
+.graph-legend-badge.stats { background: #fef3c7; color: #92400e; }
+
+.slide-canvas-display-box {
+  background: #fbfbfe;
+  border: 2px solid var(--slide-ink);
+  border-radius: 12px;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.slide-canvas-display-svg {
+  width: 100%;
+  height: 195px;
+  display: block;
+}
+
+:fullscreen .slide-canvas-display-svg,
+.slides-overlay.is-fullscreen .slide-canvas-display-svg {
+  height: 240px;
+}
+
+/* Branch Paths Mini Comparison */
+.slide-branches-summary {
+  background: #f8fafc;
+  border: 2px solid var(--slide-ink);
+  border-radius: 10px;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.branches-summary-title {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.branches-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.branch-path-chip {
+  background: #ffffff;
+  border: 1.5px solid var(--slide-ink);
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.branch-path-chip.optimal {
+  background: #ecfdf5;
+  border-color: #059669;
+  color: #065f46;
+  font-weight: 800;
+}
+
+/* ==========================================================================
+   Code Presentation Cards (Slides 4, 5, 6)
+   ========================================================================== */
+.code-editor-card {
+  background: #ffffff;
+  border: 2.5px solid var(--slide-ink);
+  border-radius: 14px;
+  box-shadow: 3.5px 3.5px 0 var(--slide-ink);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-sizing: border-box;
+}
+
+.code-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.code-card-title {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--slide-ink);
+}
+
+.code-card-tag {
+  background: var(--slide-jake-light);
+  color: #78350f;
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1.5px solid var(--slide-ink);
+}
+
+/* Python Terminal Code Snippet (Adventure Dark Editor) */
+.slide-code-box {
+  background: #0f172a;
+  border: 2px solid var(--slide-ink);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: #f8fafc;
+  white-space: pre;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.slide-code-box .kw {
+  color: #f43f5e;
+  font-weight: 700;
+}
+
+.slide-code-box .fn {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.slide-code-box .var {
+  color: #fef08a;
+}
+
+.slide-code-box .num {
+  color: #c084fc;
+}
+
+.slide-explain-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.slide-explain-list li {
+  position: relative;
+  padding-left: 18px;
+  line-height: 1.35;
+}
+
+.slide-explain-list li::before {
+  content: "•";
+  position: absolute;
+  left: 2px;
+  color: #0284c7;
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+.slide-explain-list code {
+  background: #f1f5f9;
+  color: #0f172a;
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.92em;
+  font-weight: 800;
+}
+
+/* Slide 3 Layout: 2 Equal Columns */
+.slide3-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* Slide 4 Layout: 3 Columns Top, 2 Columns Bottom */
+.slide4-top-row {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 10px;
+}
+
+.slide4-bot-row {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 10px;
+}
+
+/* Slide 5 Layout: 2 Columns Side-by-Side */
+.slide5-layout {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 14px;
+}
+
+.slide5-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.final-result-card {
+  background: #ffffff;
+  border: 3px solid var(--slide-ink);
+  border-radius: 16px;
+  box-shadow: 4px 4px 0 var(--slide-ink);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.final-result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.final-result-header h4 {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.18rem;
+  color: var(--slide-ink);
+  margin: 0;
+}
+
+.final-route-badge {
+  background: var(--slide-bmo-light);
+  color: #065f46;
+  border: 2px solid var(--slide-ink);
+  border-radius: 8px;
+  padding: 2px 10px;
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+/* Graph Preview inside Slide 6 */
+.slide-graph-container {
+  background: #f8fafc;
+  border: 2px solid var(--slide-ink);
+  border-radius: 10px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.slide-graph-svg {
+  width: 100%;
+  height: 110px;
+  display: block;
+}
+
+.final-path-flow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  background: #f8fafc;
+  border: 2px solid var(--slide-ink);
+  border-radius: 8px;
+  padding: 5px 8px;
+}
+
+.path-chip {
+  background: #ffffff;
+  color: var(--slide-ink);
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 1px 6px;
+  border-radius: 6px;
+  border: 1.5px solid var(--slide-ink);
+}
+
+.path-chip.start {
+  background: var(--slide-bmo);
+  color: #ffffff;
+}
+
+.path-chip.goal {
+  background: var(--slide-marceline);
+  color: #ffffff;
+}
+
+.path-chip-arrow {
+  color: #0284c7;
+  font-weight: 900;
+  font-size: 0.95rem;
+}
+
+.final-cost-box {
+  background: var(--slide-jake-light);
+  border: 2px solid var(--slide-ink);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #78350f;
+  line-height: 1.35;
+}
+
+.final-output-box {
+  background: #0f172a;
+  border: 2px solid var(--slide-ink);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.84rem;
+  color: #6ee7b7;
+  white-space: pre;
+}
+
+/* ==========================================================================
+   Slide 6: Iteration Steps (4x2 Grid) + CTA Launcher
+   ========================================================================== */
+.slide6-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.step-box {
+  background: #ffffff;
+  border: 2.5px solid var(--slide-ink);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 var(--slide-ink);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.step-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--slide-finn);
+  color: #ffffff;
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--slide-ink);
+  flex-shrink: 0;
+}
+
+.step-box:nth-child(even) .step-num {
+  background: var(--slide-jake);
+  color: #78350f;
+}
+
+.step-title {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--slide-ink);
+  line-height: 1.15;
+}
+
+.step-desc {
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #334155;
+  margin: 0;
+}
+
+/* Bottom CTA in Slide 6 */
+.slide6-cta-bar {
+  background: linear-gradient(90deg, #fef3c7, #e0f2fe);
+  border: 2.5px solid var(--slide-ink);
+  border-radius: 14px;
+  box-shadow: 3.5px 3.5px 0 var(--slide-ink);
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.slide6-cta-text {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.2rem;
+  color: var(--slide-ink);
+  font-weight: 700;
+}
+
+.btn-launch-viz {
+  background: var(--slide-finn) !important;
+  color: #ffffff !important;
+  border: 2.5px solid var(--slide-ink) !important;
+  box-shadow: 3px 3px 0 var(--slide-ink) !important;
+  border-radius: 10px !important;
+  padding: 8px 20px !important;
+  font-family: 'Fredoka', cursive, sans-serif !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease !important;
+}
+
+.btn-launch-viz:hover {
+  background: #0284c7 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 5px 5px 0 var(--slide-ink) !important;
+}
+
+.btn-launch-viz:active {
+  transform: translateY(1px) !important;
+  box-shadow: 1.5px 1.5px 0 var(--slide-ink) !important;
+}
+
+/* ==========================================================================
+   Bottom Navigation Dock
+   ========================================================================== */
+.slides-bottom-dock {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px;
+  background: #ffffff;
+  border-top: 3px solid var(--slide-ink);
+  box-shadow: 0 -4px 0 rgba(26, 32, 44, 0.06);
+  flex-shrink: 0;
+}
+
+.slides-dots-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slide-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  border: 2px solid var(--slide-ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.slide-dot:hover {
+  background: var(--slide-finn);
+  transform: scale(1.2);
+}
+
+.slide-dot.active {
+  width: 32px;
+  border-radius: 10px;
+  background: var(--slide-jake);
+  box-shadow: 1.5px 1.5px 0 var(--slide-ink);
+}
+
+.slides-counter-badge {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #64748b;
+  letter-spacing: 0.04em;
+}
+
+.slides-counter-badge strong {
+  color: var(--slide-ink);
+  font-size: 1.25rem;
+}
+
+.slides-dock-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-slide-nav.btn-primary-next {
+  background: var(--slide-jake);
+  color: #78350f;
+  font-weight: 700;
+}
+
+.btn-slide-nav.btn-primary-next:hover {
+  background: #fde047;
+}
+
+.btn-slide-nav.btn-primary-next:disabled,
+.btn-slide-nav:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 2px 2px 0 var(--slide-ink);
+}
+
+.slides-dock-hint {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.slides-dock-hint kbd {
+  background: #f1f5f9;
+  border: 1.5px solid var(--slide-ink);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  color: var(--slide-ink);
+  box-shadow: 1px 1px 0 var(--slide-ink);
+}
+
+/* ==========================================================================
+   FULLSCREEN MODE: STRICTLY HIDE TOP & BOTTOM BARS
+   ========================================================================== */
+:fullscreen .slides-header-bar,
+:fullscreen .slides-bottom-dock,
+.slides-overlay:fullscreen .slides-header-bar,
+.slides-overlay:fullscreen .slides-bottom-dock,
+.slides-overlay.is-fullscreen .slides-header-bar,
+.slides-overlay.is-fullscreen .slides-bottom-dock {
+  display: none !important;
+}
+
+:fullscreen .slides-viewport,
+.slides-overlay:fullscreen .slides-viewport,
+.slides-overlay.is-fullscreen .slides-viewport {
+  padding: 24px 40px;
+  height: 100vh;
+}
+
+/* Slightly scale up content in fullscreen */
+:fullscreen .slide-pane,
+.slides-overlay:fullscreen .slide-pane,
+.slides-overlay.is-fullscreen .slide-pane {
+  max-width: 1400px;
+  gap: 14px;
+}
+
+:fullscreen .slide-heading-main,
+.slides-overlay:fullscreen .slide-heading-main,
+.slides-overlay.is-fullscreen .slide-heading-main {
+  font-size: 2.1rem;
+}
+
+:fullscreen .cover-big-title,
+.slides-overlay:fullscreen .cover-big-title,
+.slides-overlay.is-fullscreen .cover-big-title {
+  font-size: 3.6rem;
+}
+
+:fullscreen .cover-sub-title,
+.slides-overlay:fullscreen .cover-sub-title,
+.slides-overlay.is-fullscreen .cover-sub-title {
+  font-size: 1.5rem;
+  margin-bottom: 22px;
+}
+
+:fullscreen .cover-authors-container,
+.slides-overlay:fullscreen .cover-authors-container,
+.slides-overlay.is-fullscreen .cover-authors-container {
+  padding: 18px 28px;
+  max-width: 720px;
+}
+
+:fullscreen .author-label-name,
+.slides-overlay:fullscreen .author-label-name,
+.slides-overlay.is-fullscreen .author-label-name {
+  font-size: 1.25rem;
+}
+
+:fullscreen .slide-lead-box,
+.slides-overlay:fullscreen .slide-lead-box,
+.slides-overlay.is-fullscreen .slide-lead-box {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  padding: 12px 20px;
+}
+
+:fullscreen .slide-lead-box strong,
+.slides-overlay:fullscreen .slide-lead-box strong,
+.slides-overlay.is-fullscreen .slide-lead-box strong {
+  font-size: 1.25rem;
+}
+
+:fullscreen .slide-sub-title,
+.slides-overlay:fullscreen .slide-sub-title,
+.slides-overlay.is-fullscreen .slide-sub-title {
+  font-size: 1.35rem;
+}
+
+:fullscreen .slide2-how-grid li,
+.slides-overlay:fullscreen .slide2-how-grid li,
+.slides-overlay.is-fullscreen .slide2-how-grid li {
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+:fullscreen .mini-feature-header,
+.slides-overlay:fullscreen .mini-feature-header,
+.slides-overlay.is-fullscreen .mini-feature-header {
+  font-size: 1.2rem;
+}
+
+:fullscreen .mini-feature-list li,
+.slides-overlay:fullscreen .mini-feature-list li,
+.slides-overlay.is-fullscreen .mini-feature-list li {
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+:fullscreen .code-card-title,
+.slides-overlay:fullscreen .code-card-title,
+.slides-overlay.is-fullscreen .code-card-title {
+  font-size: 1.3rem;
+}
+
+:fullscreen .slide-code-box,
+.slides-overlay:fullscreen .slide-code-box,
+.slides-overlay.is-fullscreen .slide-code-box {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  padding: 10px 16px;
+}
+
+:fullscreen .slide-explain-list li,
+.slides-overlay:fullscreen .slide-explain-list li,
+.slides-overlay.is-fullscreen .slide-explain-list li {
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+:fullscreen .final-result-header h4,
+.slides-overlay:fullscreen .final-result-header h4,
+.slides-overlay.is-fullscreen .final-result-header h4 {
+  font-size: 1.4rem;
+}
+
+:fullscreen .path-chip,
+.slides-overlay:fullscreen .path-chip,
+.slides-overlay.is-fullscreen .path-chip {
+  font-size: 1.1rem;
+  padding: 4px 10px;
+}
+
+:fullscreen .final-cost-box,
+.slides-overlay:fullscreen .final-cost-box,
+.slides-overlay.is-fullscreen .final-cost-box {
+  font-size: 1.1rem;
+  padding: 10px 16px;
+}
+
+:fullscreen .final-output-box,
+.slides-overlay:fullscreen .final-output-box,
+.slides-overlay.is-fullscreen .final-output-box {
+  font-size: 1rem;
+  padding: 10px 16px;
+}
+
+:fullscreen .step-title,
+.slides-overlay:fullscreen .step-title,
+.slides-overlay.is-fullscreen .step-title {
+  font-size: 1.1rem;
+}
+
+:fullscreen .step-desc,
+.slides-overlay:fullscreen .step-desc,
+.slides-overlay.is-fullscreen .step-desc {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+:fullscreen .slide6-cta-text,
+.slides-overlay:fullscreen .slide6-cta-text,
+.slides-overlay.is-fullscreen .slide6-cta-text {
+  font-size: 1.3rem;
+}
+
+:fullscreen .btn-launch-viz,
+.slides-overlay:fullscreen .btn-launch-viz,
+.slides-overlay.is-fullscreen .btn-launch-viz {
+  font-size: 1.15rem !important;
+  padding: 10px 24px !important;
+}
+
+.fullscreen-exit-float {
+  display: none;
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  z-index: 10001;
+}
+
+:fullscreen .fullscreen-exit-float,
+.slides-overlay:fullscreen .fullscreen-exit-float,
+.slides-overlay.is-fullscreen .fullscreen-exit-float {
+  display: block;
+}
+
+.btn-float-exit {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--slide-ink);
+  border: 2px solid var(--slide-ink);
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 2px 2px 0 var(--slide-ink);
+  cursor: pointer;
+  opacity: 0.3;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.btn-float-exit:hover {
+  opacity: 1;
+  transform: scale(1.05);
+  background: #ffffff;
+}
+
+/* ==========================================================================
+   Smart Viewport Scaling for Compact Heights (Laptops / Small Screens)
+   ========================================================================== */
+@media (max-height: 820px) {
+  .slides-viewport {
+    padding: 8px 18px;
+  }
+
+  .slide-pane {
+    gap: 6px;
+  }
+
+  .slide-heading-main {
+    font-size: 1.4rem;
+  }
+
+  .slide-cover-card {
+    padding: 18px 24px;
+  }
+
+  .cover-big-title {
+    font-size: 2.3rem;
+  }
+
+  .cover-sub-title {
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+  }
+
+  .code-editor-card {
+    padding: 6px 10px;
+    gap: 4px;
+  }
+
+  .slide-code-box {
+    padding: 6px 10px;
+    font-size: 0.84rem;
+    line-height: 1.35;
+  }
+
+  .slide-explain-list,
+  .slide-bullets-list,
+  .mini-feature-list {
+    font-size: 0.85rem;
+    gap: 2px;
+  }
+
+  .slide6-grid {
+    gap: 6px;
+  }
+
+  .step-box {
+    padding: 6px 8px;
+    gap: 2px;
+  }
+
+  .step-title {
+    font-size: 0.88rem;
+  }
+
+  .step-desc {
+    font-size: 0.78rem;
+    line-height: 1.25;
+  }
+
+  .slide6-cta-bar {
+    padding: 6px 14px;
+  }
+
+  .slide6-cta-text {
+    font-size: 1.05rem;
+  }
+
+  .btn-launch-viz {
+    padding: 6px 16px !important;
+    font-size: 0.95rem !important;
+  }
+}
