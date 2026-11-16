@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" id="app-viewport-meta">
   <title>UCS Visualizer - Adventure Edition</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="slides.css">
@@ -15,6 +15,51 @@
 </head>
 
 <body class="adventure-theme">
+
+  <!-- Mobile Screen Incompatibility Blocker Modal (Full Screen on Mobile) -->
+  <div id="mobile-blocker-modal" class="mobile-blocker-backdrop" role="dialog" aria-modal="true" aria-labelledby="mobile-blocker-title">
+    <div class="mobile-blocker-card">
+      <div class="mobile-top-stripe"></div>
+
+      <div class="mobile-blocker-content-wrap">
+        <div class="mobile-blocker-badge-row">
+          <span class="mobile-badge-alert">⚠️ Screen Incompatibility</span>
+          <span class="mobile-badge-device">Desktop Mode Required</span>
+        </div>
+
+        <div class="mobile-blocker-icons">
+          <div class="device-icon-item mobile-icon">
+            <span class="device-emoji">📱</span>
+            <span class="icon-cross">✕</span>
+          </div>
+          <span class="device-switch-arrow">➔</span>
+          <div class="device-icon-item desktop-icon">
+            <span class="device-emoji">🖥️</span>
+            <span class="icon-check">✓</span>
+          </div>
+        </div>
+
+        <h2 id="mobile-blocker-title" class="mobile-blocker-title">
+          Unable to Open: Screen Size Incompatible with Mobile Phones
+        </h2>
+
+        <p class="mobile-blocker-desc">
+          The Uniform Cost Search (UCS) interactive visualizer, execution graphs, and presentation deck are designed exclusively for large screens (Desktops &amp; Laptops).
+        </p>
+
+        <div class="mobile-blocker-action-box">
+          <div class="mobile-action-hint">Please open the website in Desktop Mode:</div>
+          <button id="btn-force-desktop-mode" class="btn-adv btn-desktop-mode-trigger" type="button">
+            <span>🖥️ Switch to Desktop Mode</span>
+          </button>
+        </div>
+
+        <div class="mobile-blocker-tip-box">
+          <span>💡 <strong>Tip:</strong> You can also enable <em>"Desktop site"</em> directly from your mobile browser menu.</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Full Screen Intro / Welcome Cover Screen -->
   <div id="intro-screen" class="intro-fullscreen">

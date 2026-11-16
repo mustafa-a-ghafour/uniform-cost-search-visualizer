@@ -1448,9 +1448,11 @@
 .fullscreen-exit-float {
   display: none;
   position: fixed;
-  top: 14px;
-  right: 18px;
+  top: 0;
+  right: 0;
+  padding: 14px 18px;
   z-index: 10001;
+  pointer-events: auto;
 }
 
 :fullscreen .fullscreen-exit-float,
@@ -1460,23 +1462,27 @@
 }
 
 .btn-float-exit {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   color: var(--slide-ink);
   border: 2px solid var(--slide-ink);
   border-radius: 8px;
-  padding: 4px 12px;
+  padding: 6px 14px;
   font-family: 'Fredoka', cursive, sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   font-weight: 700;
   box-shadow: 2px 2px 0 var(--slide-ink);
   cursor: pointer;
-  opacity: 0.3;
-  transition: opacity 0.2s ease, transform 0.15s ease;
+  opacity: 0; /* Completely hidden in fullscreen mode until hovered */
+  pointer-events: auto;
+  transform: translateY(-4px);
+  transition: opacity 0.25s ease, transform 0.25s ease, background 0.15s ease;
 }
 
+/* Appears only when the mouse hovers over it or the top-right trigger area */
+.fullscreen-exit-float:hover .btn-float-exit,
 .btn-float-exit:hover {
   opacity: 1;
-  transform: scale(1.05);
+  transform: translateY(0);
   background: #ffffff;
 }
 
@@ -1557,4 +1563,24 @@
     padding: 6px 16px !important;
     font-size: 0.95rem !important;
   }
+}
+
+/* ==========================================================================
+   Mobile & Touch: Strictly Hide Fullscreen Button & Floating Exit Button
+   ========================================================================== */
+.is-mobile-device #btn-slide-fullscreen,
+.is-mobile-device .fullscreen-exit-float,
+body.is-mobile-device #btn-slide-fullscreen,
+body.is-mobile-device .fullscreen-exit-float {
+  display: none !important;
+}
+
+/* ==========================================================================
+   Mobile & Touch: Strictly Hide Fullscreen Button & Floating Exit Button
+   ========================================================================== */
+.is-mobile-device #btn-slide-fullscreen,
+.is-mobile-device .fullscreen-exit-float,
+body.is-mobile-device #btn-slide-fullscreen,
+body.is-mobile-device .fullscreen-exit-float {
+  display: none !important;
 }

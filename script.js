@@ -2212,8 +2212,120 @@ document.querySelectorAll('.slide-dot').forEach(dot => {
   });
 });
 
-// 7. Initialize
+// 7. Mobile Screen Compatibility Handler
+const mobileBlockerModal = document.getElementById('mobile-blocker-modal');
+const btnForceDesktopMode = document.getElementById('btn-force-desktop-mode');
+
+function isRealMobileDevice() {
+  const ua = navigator.userAgent || '';
+  // Check for mobile phone OS user agents (Android Mobile, iPhone, iPod, etc.)
+  const isMobilePhoneUA = /Android.*Mobile|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+  const isDesktopOS = /Windows NT|Macintosh|Mac OS X|Linux x86_64/i.test(ua) && !isMobilePhoneUA;
+
+  // If running on a desktop operating system, it is definitely a PC/Laptop
+  if (isDesktopOS) {
+    return false;
+  }
+
+  // Touch phone check: small width with touch and no fine mouse pointer
+  const hasFinePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (hasFinePointer && window.innerWidth > 800) {
+    return false;
+  }
+
+  const isSmallScreen = window.innerWidth <= 768;
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  return isMobilePhoneUA || (isSmallScreen && isTouchDevice && !hasFinePointer);
+}
+
+function enableDesktopMode() {
+  const vp = document.getElementById('app-viewport-meta') || document.querySelector('meta[name="viewport"]');
+  if (vp) {
+    vp.setAttribute('content', 'width=1200, initial-scale=0.32, minimum-scale=0.2, maximum-scale=3.0, user-scalable=yes');
+  }
+
+  document.documentElement.classList.add('desktop-mode-active', 'is-mobile-device');
+  document.body.classList.add('desktop-mode-active', 'is-mobile-device');
+  document.body.classList.remove('mobile-blocker-active');
+
+  if (mobileBlockerModal) {
+    mobileBlockerModal.classList.add('dismissed');
+    mobileBlockerModal.classList.remove('is-mobile-detected');
+  }
+
+  if (btnSlideFullscreen) {
+    btnSlideFullscreen.style.display = 'none';
+  }
+
+  try {
+    sessionStorage.setItem('ucs_preferred_desktop_mode', 'true');
+  } catch (e) {}
+
+  window.dispatchEvent(new Event('resize'));
+}
+
+function checkMobileDevice() {
+  const isMobile = isRealMobileDevice();
+
+  if (!isMobile) {
+    // Standard Desktop / Laptop PC environment
+    document.documentElement.classList.remove('desktop-mode-active', 'is-mobile-device');
+    document.body.classList.remove('desktop-mode-active', 'is-mobile-device', 'mobile-blocker-active');
+
+    try {
+      sessionStorage.removeItem('ucs_preferred_desktop_mode');
+    } catch (e) {}
+
+    const vp = document.getElementById('app-viewport-meta') || document.querySelector('meta[name="viewport"]');
+    if (vp) {
+      vp.setAttribute('content', 'width=device-width, initial-scale=1.0');
+    }
+
+    if (mobileBlockerModal) {
+      mobileBlockerModal.classList.remove('is-mobile-detected');
+      mobileBlockerModal.classList.add('dismissed');
+    }
+
+    if (btnSlideFullscreen) {
+      btnSlideFullscreen.style.display = '';
+    }
+    return;
+  }
+
+  // Real Mobile Device
+  document.documentElement.classList.add('is-mobile-device');
+  document.body.classList.add('is-mobile-device');
+  if (btnSlideFullscreen) {
+    btnSlideFullscreen.style.display = 'none';
+  }
+
+  let preferred = false;
+  try {
+    preferred = sessionStorage.getItem('ucs_preferred_desktop_mode') === 'true';
+  } catch (e) {}
+
+  if (preferred) {
+    enableDesktopMode();
+  } else {
+    if (mobileBlockerModal) {
+      mobileBlockerModal.classList.add('is-mobile-detected');
+      mobileBlockerModal.classList.remove('dismissed');
+      document.body.classList.add('mobile-blocker-active');
+    }
+  }
+}
+
+if (btnForceDesktopMode) {
+  btnForceDesktopMode.addEventListener('click', enableDesktopMode);
+}
+
+window.addEventListener('resize', () => {
+  checkMobileDevice();
+});
+
+// 8. Initialize
 function init() {
+  checkMobileDevice();
   loadGraph('graph1');
   if (startModal) {
     startModal.classList.add('hidden');
